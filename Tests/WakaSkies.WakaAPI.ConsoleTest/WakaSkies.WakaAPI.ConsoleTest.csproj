@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WakaSkies.WakaAPI\WakaSkies.WakaAPI.csproj" />
+    <ProjectReference Include="..\..\WakaSkies.WakaAPI\WakaSkies.WakaAPI.csproj" />
   </ItemGroup>
 
 </Project>

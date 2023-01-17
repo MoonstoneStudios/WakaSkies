@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33209.295
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakaSkies.WakaAPI", "WakaSkies.WakaAPI\WakaSkies.WakaAPI.csproj", "{F7855C00-4C3C-4037-A58B-121D0421ECD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WakaSkies.WakaAPI", "WakaSkies.WakaAPI\WakaSkies.WakaAPI.csproj", "{F7855C00-4C3C-4037-A58B-121D0421ECD2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D74665ED-CD81-4B0B-8938-431EDFA0E03A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakaSkies.WakaAPI.ConsoleTest", "WakaSkies.WakaAPI.ConsoleTest\WakaSkies.WakaAPI.ConsoleTest.csproj", "{51208091-40D6-4579-ADDD-0B31A93B00B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WakaSkies.WakaAPI.ConsoleTest", "Tests\WakaSkies.WakaAPI.ConsoleTest\WakaSkies.WakaAPI.ConsoleTest.csproj", "{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +19,16 @@ Global
 		{F7855C00-4C3C-4037-A58B-121D0421ECD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7855C00-4C3C-4037-A58B-121D0421ECD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7855C00-4C3C-4037-A58B-121D0421ECD2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51208091-40D6-4579-ADDD-0B31A93B00B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51208091-40D6-4579-ADDD-0B31A93B00B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51208091-40D6-4579-ADDD-0B31A93B00B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51208091-40D6-4579-ADDD-0B31A93B00B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{51208091-40D6-4579-ADDD-0B31A93B00B3} = {D74665ED-CD81-4B0B-8938-431EDFA0E03A}
+		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E} = {D74665ED-CD81-4B0B-8938-431EDFA0E03A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D23A562-9CAA-4ECB-8128-732C09C6F6A1}
