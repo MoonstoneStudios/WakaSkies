@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D74665ED
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WakaSkies.WakaAPI.ConsoleTest", "Tests\WakaSkies.WakaAPI.ConsoleTest\WakaSkies.WakaAPI.ConsoleTest.csproj", "{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakaSkies.WakaModelBuilder", "WakaSkies.ModelBuilder\WakaSkies.WakaModelBuilder.csproj", "{646760B3-A36A-4BA7-AA94-D67F5524106A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFBFB4D8-376E-46A0-92CA-E0776E19C25E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{646760B3-A36A-4BA7-AA94-D67F5524106A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{646760B3-A36A-4BA7-AA94-D67F5524106A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{646760B3-A36A-4BA7-AA94-D67F5524106A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{646760B3-A36A-4BA7-AA94-D67F5524106A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

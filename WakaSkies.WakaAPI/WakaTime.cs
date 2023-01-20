@@ -8,13 +8,13 @@ namespace WakaSkies.WakaAPI
     /// <remarks>
     /// When the class is created you must pass an API key into the constructor. The base64 encoding will be done here.
     /// <para>
-    /// This class will get the data of a user from the WakaTime API using their Insights enpoint.
+    /// This class will get the data of a user from the WakaTime API using their Insights endpoint.
     /// </para>
     /// </remarks>
     public class WakaTime
     {
         /// <summary>
-        /// The base address for wakatime.
+        /// The base address for WakaTime.
         /// </summary>
         public const string WAKA_BASE_ADDRESS = "https://wakatime.com/api/v1/users/";
 
@@ -43,7 +43,7 @@ namespace WakaSkies.WakaAPI
         /// <summary>
         /// Get the insights.
         /// </summary>
-        /// <param name="userName">The username of the User we are retriveing data from.</param>
+        /// <param name="userName">The username of the User we are retrieving data from.</param>
         /// <param name="year">The year to grab in YYYY format.</param>
         /// <param name="timeout">The optional keystroke timeout to get.</param>
         /// <returns>A new <see cref="WakaResponse"/>.</returns>
@@ -70,7 +70,7 @@ namespace WakaSkies.WakaAPI
             // check if failed.
             if (!response.IsSuccessStatusCode)
             {
-                // return an unseccsessful object.
+                // return an unsuccessful object.
                 return new WakaResponse()
                 {
                     Successful = false,
