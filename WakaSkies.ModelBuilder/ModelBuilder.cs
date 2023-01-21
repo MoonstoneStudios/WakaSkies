@@ -21,8 +21,8 @@ namespace WakaSkies.WakaModelBuilder
         /// The <see cref="WakaResponse"/> returned by 
         /// <see cref="WakaTime.GetUserInsights(string, string, string?)"/>.
         /// </param>
-        /// <returns>A brand new triangulated <see cref="Model"/>.</returns>
-        public Model BuildModel(WakaResponse response)
+        /// <returns>A brand new triangulated <see cref="WakaModel"/>.</returns>
+        public WakaModel BuildModel(WakaResponse response)
         {
             if (!response.Successful) return null;
 
@@ -32,7 +32,7 @@ namespace WakaSkies.WakaModelBuilder
             {
                 var day = response.Data.Days[i];
                 // temp data, TODO: round total and place in right spot.
-                var prism = new RectangularPrism((int)day.Total / 120, new Vector3(i + 5, 0, 0));
+                var prism = new RectangularPrism((int)day.Total / 180, new Vector3(i + 5, 0, 0));
                 prisms[i] = prism;
             }
 
@@ -47,10 +47,10 @@ namespace WakaSkies.WakaModelBuilder
         /// </summary>
         /// <param name="prisms">The prisms to triangulate.</param>
         /// <returns>A triangulated model.</returns>
-        private Model Triangulate(RectangularPrism[] prisms)
+        private WakaModel Triangulate(RectangularPrism[] prisms)
         {
             // there are 12 triangles in a rectangular prism.
-            Model model = new Model(prisms.Length * 12); 
+            WakaModel model = new WakaModel(prisms.Length * 12); 
             for (int i = 0; i < prisms.Length; i++)
             {
                 var prism = prisms[i];

@@ -10,7 +10,7 @@ namespace WakaSkies.WakaModelBuilder
     /// <summary>
     /// A 3D model.
     /// </summary>
-    public class Model
+    public class WakaModel
     {
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace WakaSkies.WakaModelBuilder
         private int faceCount = 0;
         private int vertexCount = 0;
 
-        public Model(int triangleCount)
+        public WakaModel(int triangleCount)
         {
             Faces = new TriangleFace[triangleCount];
             // 3 vertices per triangle
