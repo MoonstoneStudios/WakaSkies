@@ -13,6 +13,14 @@ namespace WakaSkies.WakaModelBuilder
     /// </summary>
     public class ModelBuilder
     {
+        /// <summary>
+        /// How much to add to the position of the model.
+        /// </summary>
+        /// <remarks>
+        /// The base that will be added is exactly this tall. By moving up the generated model,
+        /// the rectangular prisms will be in the correct positions.
+        /// </remarks>
+        private const float BOTTOM_OF_MODEL = 3.01121f;
 
         /// <summary>
         /// Build the model.
@@ -26,14 +34,47 @@ namespace WakaSkies.WakaModelBuilder
         {
             if (!response.Successful) return null;
 
-            RectangularPrism[] prisms = new RectangularPrism[response.Data.Days.Length];
+            List<RectangularPrism> prisms = new List<RectangularPrism>();
 
-            for (int i = 0; i < prisms.Length; i++)
+            // the first day to start on
+            int firstDay = 0;
+            // the current week.
+            int currentWeek = 0;
+            // the current day 0-6.
+            int currentDay = 0;
+
+            var yearData = response.Data.Days[0].Date;
+            firstDay = (int)yearData.DayOfWeek;
+            currentDay = firstDay;
+            for (int i = 0; i < response.Data.Days.Length; i++)
             {
                 var day = response.Data.Days[i];
-                // temp data, TODO: round total and place in right spot.
-                var prism = new RectangularPrism((int)day.Total / 180, new Vector3(i + 5, 0, 0));
-                prisms[i] = prism;
+
+                var position = new Vector3(currentWeek, BOTTOM_OF_MODEL, currentDay);
+                // divide by 3600 to find hours.
+                var height = (int)Math.Round(day.Total / 3600f);
+
+                ////if less than half hour skip.
+                //if (height < 0.5)
+                //{
+                //    currentDay++;
+                //    if (currentDay >= 7)
+                //    {
+                //        currentDay = 0;
+                //        currentWeek++;
+                //    }
+                //    continue;
+                //}
+
+                var prism = new RectangularPrism(height, position);
+                prisms.Add(prism);
+
+                currentDay++;
+                if (currentDay >= 7)
+                {
+                    currentDay = 0;
+                    currentWeek++;
+                }
             }
 
             //var prism = new RectangularPrism(5, Vector3.Zero);
@@ -47,13 +88,15 @@ namespace WakaSkies.WakaModelBuilder
         /// </summary>
         /// <param name="prisms">The prisms to triangulate.</param>
         /// <returns>A triangulated model.</returns>
-        private WakaModel Triangulate(RectangularPrism[] prisms)
+        private WakaModel Triangulate(List<RectangularPrism> prisms)
         {
             // there are 12 triangles in a rectangular prism.
-            WakaModel model = new WakaModel(prisms.Length * 12); 
-            for (int i = 0; i < prisms.Length; i++)
+            WakaModel model = new WakaModel(prisms.Count * 12); 
+            for (int i = 0; i < prisms.Count; i++)
             {
                 var prism = prisms[i];
+                // no data
+                if (prism == null) continue;
                 // Bottom Square:
                 // A---D
                 // | \ |
