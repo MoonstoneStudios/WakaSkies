@@ -17,7 +17,7 @@ namespace WakaSkies.WakaModelBuilder.ConoleTest
             string year = ReadLine();
             WriteLine("Fetching...");
 
-            var waka = new WakaTime(key);
+            var waka = new WakaClient(key);
             var response = await waka.GetUserInsights(userName, year);
             if (response.Successful)
             {

@@ -29,7 +29,7 @@ namespace WakaSkies.WakaModelBuilder
         /// </summary>
         /// <param name="response">
         /// The <see cref="WakaResponse"/> returned by 
-        /// <see cref="WakaTime.GetUserInsights(string, string, string?)"/>.
+        /// <see cref="WakaClient.GetUserInsights(string, string, string?)"/>.
         /// </param>
         /// <returns>A brand new triangulated <see cref="WakaModel"/>.</returns>
         public WakaModel BuildModel(WakaResponse response)

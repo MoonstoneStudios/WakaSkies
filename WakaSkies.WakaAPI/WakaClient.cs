@@ -11,7 +11,7 @@ namespace WakaSkies.WakaAPI
     /// This class will get the data of a user from the WakaTime API using their Insights endpoint.
     /// </para>
     /// </remarks>
-    public class WakaTime
+    public class WakaClient
     {
         /// <summary>
         /// The base address for WakaTime.
@@ -30,7 +30,7 @@ namespace WakaSkies.WakaAPI
         /// Create a new WakaTime class.
         /// </summary>
         /// <param name="apiKey">The user's API key. This should be in plain text.</param>
-        public WakaTime(string apiKey)
+        public WakaClient(string apiKey)
         {
             // https://stackoverflow.com/a/11743162
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(apiKey);
