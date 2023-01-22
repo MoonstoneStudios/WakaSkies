@@ -52,7 +52,9 @@ namespace WakaSkies.WakaModelBuilder
             {
                 var day = response.Data.Days[i];
 
-                var position = new Vector3(currentWeek, BOTTOM_OF_MODEL, currentDay);
+                // subtract so that is in the right position.
+                // for now, the base is positioned in the -Ys.
+                var position = new Vector3(currentWeek, -currentDay - 1, BOTTOM_OF_MODEL);
                 // divide by 3600 to find hours.
                 var height = (int)Math.Round(day.Total / 3600f);
 

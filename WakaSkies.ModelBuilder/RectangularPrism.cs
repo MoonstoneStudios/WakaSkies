@@ -71,28 +71,28 @@ namespace WakaSkies.WakaModelBuilder
         /// </param>
         private void Generate3DShape(int height, Vector3 position)
         {
+            // 3D printers use Z as up and +Y as forward.
             // Set the A vertex.
             points[0] = position;
             // the B vertex.
-            // Most rendering engines use Y as up so the +Z is towards the camera. 
-            points[1] = AddZ(position, VERTEX_SPACING);
+            points[1] = AddY(position, VERTEX_SPACING);
             // the C vertex
-            points[2] = AddZ(position, VERTEX_SPACING);
+            points[2] = AddY(position, VERTEX_SPACING);
             points[2] = AddX(points[2], VERTEX_SPACING);
             // the D vertex.
             points[3] = AddX(position, VERTEX_SPACING);
             // the E vertex
-            points[4] = AddY(position, height);
+            points[4] = AddZ(position, height);
             // the F vertex
-            points[5] = AddZ(position, VERTEX_SPACING);
-            points[5] = AddY(points[5], height);
+            points[5] = AddY(position, VERTEX_SPACING);
+            points[5] = AddZ(points[5], height);
             // the G vertex
-            points[6] = AddZ(position, VERTEX_SPACING);
+            points[6] = AddY(position, VERTEX_SPACING);
             points[6] = AddX(points[6], VERTEX_SPACING);
-            points[6] = AddY(points[6], height);
+            points[6] = AddZ(points[6], height);
             // the H vertex.
             points[7] = AddX(position, VERTEX_SPACING);
-            points[7] = AddY(points[7], height);
+            points[7] = AddZ(points[7], height);
         }
 
         private static Vector3 AddX(Vector3 vector, float x) => new Vector3(x + vector.X, vector.Y, vector.Z);
