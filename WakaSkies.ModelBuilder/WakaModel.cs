@@ -46,5 +46,27 @@ namespace WakaSkies.WakaModelBuilder
             }
         }
 
+        /// <summary>
+        /// Combine two models.
+        /// </summary>
+        /// <param name="a">A model to combine.</param>
+        /// <param name="b">A model to combine.</param>
+        /// <returns>A new Model that contains both model's faces.</returns>
+        public static WakaModel CombineModels(WakaModel a, WakaModel b)
+        {
+            // get total triangle count.
+            WakaModel newModel = new WakaModel(a.Faces.Length + b.Faces.Length);
+
+            for (int i = 0; i < a.Faces.Length; i++)
+            {
+                newModel.AddTriangle(a.Faces[i]);
+            }
+            for (int i = 0; i < b.Faces.Length; i++)
+            {
+                newModel.AddTriangle(b.Faces[i]);
+            }
+            return newModel;
+        }
+
     }
 }

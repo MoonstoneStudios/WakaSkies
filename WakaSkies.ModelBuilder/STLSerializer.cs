@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WakaSkies.WakaModelBuilder
@@ -67,9 +68,54 @@ namespace WakaSkies.WakaModelBuilder
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Deserialize an stl file.
+        /// </summary>
+        /// <param name="stl">The stl file content.</param>
+        /// <returns>A new <see cref="WakaModel"/>.</returns>
+        public WakaModel Deserialize(string stl)
+        {
+            List<TriangleFace> faces = new List<TriangleFace>();
+
+            string vertexRegex = @"(?<=vertex ).+";
+            string normalRegex = @"(?<=normal ).+";
+
+            Regex vRegex = new Regex(vertexRegex);
+            Regex nRegex = new Regex(normalRegex);
+
+            var vertexMatches = vRegex.Matches(stl);
+            var normalMatches = nRegex.Matches(stl);
+
+            int vertexI = 0;
+            for (int i = 0; i < normalMatches.Count; i++)
+            {
+                var normal = ToVec(normalMatches[i].Value);
+
+                var vec1 = ToVec(vertexMatches[vertexI++].Value);
+                var vec2 = ToVec(vertexMatches[vertexI++].Value);
+                var vec3 = ToVec(vertexMatches[vertexI++].Value);
+
+                faces.Add(new TriangleFace(normal, vec1, vec2, vec3));
+            }
+
+            WakaModel model = new WakaModel(faces.Count);
+            faces.ForEach(f => model.AddTriangle(f));
+            return model;
+        }
+
+        /// <summary>Convert a <see cref="Vector3"/> to a string.</summary> 
         private string ToSTL(Vector3 vector)
         {
             return $"{vector.X} {vector.Y} {vector.Z}";
+        }
+
+        /// <summary>Convert a string to a <see cref="Vector3"/>.</summary> 
+        private Vector3 ToVec(string vector)
+        {
+            // split by space
+            string[] numbers = vector.Split(' ');
+
+            return new Vector3(float.Parse(numbers[0]), float.Parse(numbers[1]), float.Parse(numbers[2]));
         }
 
     }

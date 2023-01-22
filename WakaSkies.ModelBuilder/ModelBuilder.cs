@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using WakaSkies.WakaAPI;
@@ -77,10 +79,8 @@ namespace WakaSkies.WakaModelBuilder
                 }
             }
 
-            //var prism = new RectangularPrism(5, Vector3.Zero);
-            //prisms[0] = prism;
-
-            return Triangulate(prisms);
+            var model = Triangulate(prisms);
+            return AppendBase(model);
         }
 
         /// <summary>
@@ -180,6 +180,32 @@ namespace WakaSkies.WakaModelBuilder
             }
 
             return model;
+        }
+
+        /// <summary>
+        /// Add the base to the model.
+        /// </summary>
+        /// <remarks>
+        /// The base is an STL file that is stored as an embedded resource. 
+        /// </remarks>
+        /// <param name="prismModel">The prisms.</param>
+        /// <returns>The final model with the base attached.</returns>
+        private WakaModel AppendBase(WakaModel prismModel)
+        {
+            // https://stackoverflow.com/a/3314213
+            var assem = Assembly.GetExecutingAssembly();
+            string file = "";
+
+            using (var stream = assem.GetManifestResourceStream("WakaSkies.WakaModelBuilder.Resources.base.stl"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                file = reader.ReadToEnd();
+            }
+
+            var serializer = new STLSerializer();
+            var baseModel = serializer.Deserialize(file);
+
+            return WakaModel.CombineModels(prismModel, baseModel);
         }
 
     }

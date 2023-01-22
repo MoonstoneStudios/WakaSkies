@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\base.stl" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WakaSkies.WakaAPI\WakaSkies.WakaAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\base.stl" />
   </ItemGroup>
 
 </Project>
