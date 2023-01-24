@@ -31,6 +31,8 @@ namespace WakaSkies.Desktop
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            Window.Title = "WakaSkies Beta 1.0.0";
         }
 
         protected override void Initialize()
