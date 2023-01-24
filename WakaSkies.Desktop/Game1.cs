@@ -26,6 +26,8 @@ namespace WakaSkies.Desktop
 
         private Vector3 pos = new Vector3(0, 10, 30);
 
+        private Skybox skybox;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -46,6 +48,8 @@ namespace WakaSkies.Desktop
         protected override async void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            skybox = new Skybox("cubemap", Content);
 
             wakaTime = new WakaClient("");
             var insights = await wakaTime.GetUserInsights("", "");
@@ -99,6 +103,15 @@ namespace WakaSkies.Desktop
         {
             GraphicsDevice.Clear(Color.DarkSlateBlue);
 
+            //var rast = new RasterizerState();
+            //rast.CullMode = CullMode.CullClockwiseFace;
+            //GraphicsDevice.RasterizerState = rast;
+
+            skybox.Draw(view, projection, pos);
+
+            //var rast1 = new RasterizerState();
+            //rast1.CullMode = CullMode.None;
+            //GraphicsDevice.RasterizerState = rast1;
 
             if (effect != null)
             {
