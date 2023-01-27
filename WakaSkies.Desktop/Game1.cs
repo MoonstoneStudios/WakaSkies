@@ -1,8 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
+using WakaSkies.Desktop.UI;
 using WakaSkies.WakaAPI;
 using WakaSkies.WakaModelBuilder;
+
+using MDesktop = Myra.Graphics2D.UI.Desktop;
 
 namespace WakaSkies.Desktop
 {
@@ -28,6 +32,13 @@ namespace WakaSkies.Desktop
 
         private Skybox skybox;
 
+        MDesktop ui;
+
+        private RasterizerState rasterizer = new RasterizerState()
+        {
+            CullMode = CullMode.None
+        };
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -51,8 +62,27 @@ namespace WakaSkies.Desktop
 
             skybox = new Skybox("cubemap", Content);
 
-            wakaTime = new WakaClient("");
-            var insights = await wakaTime.GetUserInsights("", "");
+            MyraEnvironment.Game = this;
+            ui = new MDesktop();
+
+            var startMenu = new StartMenu();
+            startMenu.generateButton.Click += GenerateModel;
+            ui.Root = startMenu;
+
+
+            effect = new BasicEffect(GraphicsDevice);
+            effect.VertexColorEnabled = true;
+            effect.EnableDefaultLighting();
+            effect.Alpha = 0.5f;
+            effect.DiffuseColor = Color.LightGray.ToVector3();
+            GraphicsDevice.RasterizerState = rasterizer;
+        }
+
+        private async void GenerateModel(object sender, System.EventArgs e)
+        {
+            var start = (StartMenu)ui.Root;
+            wakaTime = new WakaClient(start.wakaKeyInput.Text);
+            var insights = await wakaTime.GetUserInsights(start.wakaUserInput.Text, start.wakaYearCombo.SelectedItem.Text);
             ModelBuilder builder = new ModelBuilder();
             model = builder.BuildModel(insights);
 
@@ -71,16 +101,7 @@ namespace WakaSkies.Desktop
                 }
             }
 
-
-            effect = new BasicEffect(GraphicsDevice);
-            effect.VertexColorEnabled = true;
-            effect.EnableDefaultLighting();
-            effect.Alpha = 0.5f;
-            effect.DiffuseColor = Color.LightGray.ToVector3();
-            var rast = new RasterizerState();
-            rast.CullMode = CullMode.None;
-            //rast.FillMode = FillMode.WireFrame;
-            GraphicsDevice.RasterizerState = rast;
+            start.Visible = false;
         }
 
         protected override async void Update(GameTime gameTime)
@@ -88,11 +109,14 @@ namespace WakaSkies.Desktop
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var k = Keyboard.GetState();
-            if (k.IsKeyDown(Keys.A)) pos.X -= 0.1f;
-            if (k.IsKeyDown(Keys.D)) pos.X += 0.1f;
-            if (k.IsKeyDown(Keys.W)) pos.Y -= 0.1f;
-            if (k.IsKeyDown(Keys.S)) pos.Y += 0.1f;
+            if (verts != null)
+            {
+                var k = Keyboard.GetState();
+                if (k.IsKeyDown(Keys.A)) pos.X -= 0.1f;
+                if (k.IsKeyDown(Keys.D)) pos.X += 0.1f;
+                if (k.IsKeyDown(Keys.W)) pos.Y -= 0.1f;
+                if (k.IsKeyDown(Keys.S)) pos.Y += 0.1f;
+            }
 
             view = Matrix.CreateLookAt(new Vector3(pos.X, pos.Y, 30), new Vector3(0, 0, 0), Vector3.UnitY);
 
@@ -101,19 +125,17 @@ namespace WakaSkies.Desktop
 
         protected override async void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkSlateBlue);
+            // reset the Graphics Device.
+            // the SpriteBatch messes with it.
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            GraphicsDevice.RasterizerState = rasterizer;
 
-            //var rast = new RasterizerState();
-            //rast.CullMode = CullMode.CullClockwiseFace;
-            //GraphicsDevice.RasterizerState = rast;
+            GraphicsDevice.Clear(Color.DarkSlateBlue);
 
             skybox.Draw(view, projection, pos);
 
-            //var rast1 = new RasterizerState();
-            //rast1.CullMode = CullMode.None;
-            //GraphicsDevice.RasterizerState = rast1;
-
-            if (effect != null)
+            if (effect != null && verts != null)
             {
                 effect.World = world;
                 effect.Projection = projection;
@@ -126,7 +148,11 @@ namespace WakaSkies.Desktop
                 }
             }
 
+
+            ui.Render();
+
             base.Draw(gameTime);
         }
+
     }
 }

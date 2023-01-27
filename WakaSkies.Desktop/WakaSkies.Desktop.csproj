@@ -25,6 +25,7 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="Myra" Version="1.4.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WakaSkies.ModelBuilder\WakaSkies.WakaModelBuilder.csproj" />
