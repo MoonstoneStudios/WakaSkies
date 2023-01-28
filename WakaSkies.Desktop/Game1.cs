@@ -27,19 +27,13 @@ namespace WakaSkies.Desktop
         private VertexPositionColorNormal[] verts;
         private BasicEffect effect;
 
-        // http://rbwhitaker.wikidot.com/monogame-using-3d-models
-        private Matrix world = Matrix.CreateRotationX(MathHelper.ToRadians(-90)) *
-            Matrix.CreateTranslation(new Vector3(-15, -5, 0));
-        private Matrix view = Matrix.CreateLookAt(new Vector3(0, 10, 30), new Vector3(0, 0, 0), Vector3.UnitY);
-        private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1280f / 720f, 0.1f, 1000f);
-
-        private Vector3 pos = new Vector3(0, 10, 30);
-
         private Skybox skybox;
 
-        MDesktop ui;
+        private MDesktop ui;
 
         private bool textBoxVisible = true;
+
+        private Camera camera;
 
         private RasterizerState rasterizer = new RasterizerState()
         {
@@ -60,6 +54,13 @@ namespace WakaSkies.Desktop
             GraphicsDevice.PresentationParameters.BackBufferWidth = 1280;
             GraphicsDevice.PresentationParameters.BackBufferHeight = 720;
 
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += (s, e) =>
+            {
+                camera.ChangeSize(GraphicsDevice.PresentationParameters.BackBufferWidth,
+                    GraphicsDevice.PresentationParameters.BackBufferHeight);
+            };
+
             base.Initialize();
         }
 
@@ -68,6 +69,8 @@ namespace WakaSkies.Desktop
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             skybox = new Skybox("cubemap", Content);
+
+            camera = new Camera();
 
             MyraEnvironment.Game = this;
             MyraEnvironment.DefaultAssetManager.AssetResolver = 
@@ -132,7 +135,8 @@ namespace WakaSkies.Desktop
             for (int i = 0; i < verts.Length; i++)
             {
                 verts[i] = new VertexPositionColorNormal(
-                    model.Vertices[i].ToMonoGame(), Color.White, Vector3.TransformNormal(model.Faces[faceCount].Normal, world));
+                    model.Vertices[i].ToMonoGame(), Color.White, 
+                    Vector3.TransformNormal(model.Faces[faceCount].Normal, camera.world));
                 faceCounter++;
                 if (faceCounter >= 3)
                 {
@@ -150,6 +154,7 @@ namespace WakaSkies.Desktop
                 textBoxVisible = true;
 
                 ui.Widgets.Remove(icons);
+                camera.StopRotation();
             };
 
             icons.downloadButton.Click += (s, e) =>
@@ -179,6 +184,8 @@ namespace WakaSkies.Desktop
 
             start.Visible = false;
             textBoxVisible = false;
+
+            camera.StartRotation();
         }
 
         protected override async void Update(GameTime gameTime)
@@ -186,17 +193,16 @@ namespace WakaSkies.Desktop
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (verts != null && !textBoxVisible)
-            {
-                var k = Keyboard.GetState();
-                if (k.IsKeyDown(Keys.A)) pos.X -= 0.1f;
-                if (k.IsKeyDown(Keys.D)) pos.X += 0.1f;
-                if (k.IsKeyDown(Keys.W)) pos.Y -= 0.1f;
-                if (k.IsKeyDown(Keys.S)) pos.Y += 0.1f;
-            }
-
-            view = Matrix.CreateLookAt(new Vector3(pos.X, pos.Y, 30), new Vector3(0, 0, 0), Vector3.UnitY);
-
+            //if (verts != null && !textBoxVisible)
+            //{
+            //    var k = Keyboard.GetState();
+            //    if (k.IsKeyDown(Keys.A)) pos.X -= 0.1f;
+            //    if (k.IsKeyDown(Keys.D)) pos.X += 0.1f;
+            //    if (k.IsKeyDown(Keys.W)) pos.Y -= 0.1f;
+            //    if (k.IsKeyDown(Keys.S)) pos.Y += 0.1f;
+            //}
+            camera.Update(gameTime);
+            
             base.Update(gameTime);
         }
 
@@ -210,13 +216,13 @@ namespace WakaSkies.Desktop
 
             GraphicsDevice.Clear(Color.DarkSlateBlue);
 
-            skybox.Draw(view, projection, pos);
+            skybox.Draw(camera.view, camera.projection, camera.cameraPos);
 
             if (effect != null && verts != null)
             {
-                effect.World = world;
-                effect.Projection = projection;
-                effect.View = view;
+                effect.World = camera.world;
+                effect.Projection = camera.projection;
+                effect.View = camera.view;
                 foreach (var pass in effect.CurrentTechnique.Passes)
                 {
                     // https://github.com/simondarksidej/XNAGameStudio/wiki/RiemersArchiveOverview
