@@ -1,16 +1,16 @@
 <Project>
   <VerticalStackPanel Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="15" Background="#00000080">
     <HorizontalStackPanel>
-      <Label Text="WakaTime API Key:" />
-      <TextBox MinWidth="300" MaxWidth="300" Margin="15, 0, 0, 0" Id="wakaKeyInput" />
+      <Label Text="WakaTime API Key:" Margin="0, 0, 15, 0" />
+      <TextBox MinWidth="300" MaxWidth="300" Width="300" Id="wakaKeyInput" />
     </HorizontalStackPanel>
     <HorizontalStackPanel>
-      <Label Text="WakaTime User Name:" />
-      <TextBox MinWidth="300" MaxWidth="300" Margin="15, 0, 0, 0" Id="wakaUserInput" />
+      <Label Text="WakaTime User Name:" Margin="0, 0, 15, 0" />
+      <TextBox MinWidth="300" MaxWidth="300" Id="wakaUserInput" />
     </HorizontalStackPanel>
     <HorizontalStackPanel>
       <Label Text="Year:" />
-      <ComboBox Margin="15, 0, 0, 0" Id="wakaYearCombo">        
+      <ComboBox Margin="15, 0, 0, 0" Id="wakaYearCombo">
         <ListItem Text="2023" />
         <ListItem Text="2022" />
         <ListItem Text="2021" />
@@ -24,6 +24,7 @@
         <ListItem Text="2013" />
       </ComboBox>
     </HorizontalStackPanel>
+    <Label Wrap="True" TextAlign="Center" TextColor="#FF5E6EFF" MaxWidth="400" HorizontalAlignment="Center" Visible="False" Id="errorText" />
     <TextButton Text="Generate Model!" PressedBackground="#4242A6FF" Height="45" HorizontalAlignment="Stretch" Background="#5756D5FF" OverBackground="#4F4FC4FF" Id="generateButton" />
   </VerticalStackPanel>
 </Project>

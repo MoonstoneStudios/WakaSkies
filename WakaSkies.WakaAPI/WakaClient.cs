@@ -36,6 +36,13 @@ namespace WakaSkies.WakaAPI
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(apiKey);
             var key = Convert.ToBase64String(plainTextBytes);
 
+            // check if it exists already, if it does,
+            // remove it and re add in case the key is
+            // brand new.
+            if (client.DefaultRequestHeaders.Contains("Authorization"))
+            {
+                client.DefaultRequestHeaders.Remove("Authorization");
+            }
             // add the authorization header
             client.DefaultRequestHeaders.Add("Authorization", $"Basic {key}");
         }
@@ -56,7 +63,7 @@ namespace WakaSkies.WakaAPI
                 return new WakaResponse()
                 {
                     Successful = false,
-                    ErrorData = new ErrorData(System.Net.HttpStatusCode.BadRequest, "Year is not in YYYY format.")
+                    ErrorData = new ErrorData("Year is not in YYYY format.")
                 };
             }
 
@@ -74,13 +81,41 @@ namespace WakaSkies.WakaAPI
                 return new WakaResponse()
                 {
                     Successful = false,
-                    ErrorData = new ErrorData(response.StatusCode, response.ReasonPhrase)
+                    ErrorData = new ErrorData($"{response.StatusCode:D} {response.ReasonPhrase}.")
                 };
             }
 
             // successful response, decode data and return
             var content = await response.Content.ReadAsStringAsync();
-            var wakaResponse = JsonConvert.DeserializeObject<WakaResponse>(content);
+            WakaResponse wakaResponse = null;
+
+            try
+            {
+                wakaResponse = JsonConvert.DeserializeObject<WakaResponse>(content);
+            }
+            catch(Exception e)
+            {
+                // return an unsuccessful object.
+                return new WakaResponse()
+                {
+                    Successful = false,
+                    ErrorData = new ErrorData("There was an error trying to read the response from WakaTime.")
+                };
+            }
+
+            if (wakaResponse.Data.Days != null)
+            {
+                if (wakaResponse.Data.Days.Length == 0)
+                {
+                    // return an unsuccessful object.
+                    return new WakaResponse()
+                    {
+                        Successful = false,
+                        ErrorData = new ErrorData("You have not programmed in the selected year.")
+                    };
+                }
+            }
+
             wakaResponse.Content = content;
             return wakaResponse;
         }

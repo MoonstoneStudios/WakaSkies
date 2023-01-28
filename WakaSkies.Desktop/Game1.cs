@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FontStashSharp.Rasterizers.StbTrueTypeSharp;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
+using System;
 using WakaSkies.Desktop.UI;
 using WakaSkies.WakaAPI;
 using WakaSkies.WakaModelBuilder;
@@ -81,10 +83,36 @@ namespace WakaSkies.Desktop
         private async void GenerateModel(object sender, System.EventArgs e)
         {
             var start = (StartMenu)ui.Root;
+            if (string.IsNullOrWhiteSpace(start.wakaKeyInput.Text)
+                || string.IsNullOrWhiteSpace(start.wakaUserInput.Text))
+            {
+                start.errorText.Text = "Error: some required information is missing.";
+                start.errorText.Visible = true;
+                return;
+            }
+
             wakaTime = new WakaClient(start.wakaKeyInput.Text);
             var insights = await wakaTime.GetUserInsights(start.wakaUserInput.Text, start.wakaYearCombo.SelectedItem.Text);
+
+            if (!insights.Successful)
+            {
+                start.errorText.Text = $"Error: {insights.ErrorData.Reason}";
+                start.errorText.Visible = true;
+                return;
+            }
+
             ModelBuilder builder = new ModelBuilder();
-            model = builder.BuildModel(insights);
+
+            try
+            {
+                model = builder.BuildModel(insights);
+            }
+            catch (Exception ex)
+            {
+                start.errorText.Text = $"Error: {ex.Message}";
+                start.errorText.Visible = true;
+                return;
+            }
 
             verts = new VertexPositionColorNormal[model.Vertices.Length];
             var faceCount = 0;

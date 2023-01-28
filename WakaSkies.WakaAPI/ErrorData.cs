@@ -14,18 +14,12 @@ namespace WakaSkies.WakaAPI
     public class ErrorData
     {
         /// <summary>
-        /// The status code.
-        /// </summary>
-        public HttpStatusCode StatusCode { get; set; }
-
-        /// <summary>
         /// The reason.
         /// </summary>
         public string Reason { get; set; }
 
-        public ErrorData(HttpStatusCode statusCode, string reason)
+        public ErrorData(string reason)
         {
-            StatusCode = statusCode;
             Reason = reason;
         }
     }
