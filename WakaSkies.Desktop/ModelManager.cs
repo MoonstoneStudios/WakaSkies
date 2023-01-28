@@ -71,6 +71,8 @@ namespace WakaSkies.Desktop
                 return false;
             }
 
+            start.generateButton.Text = "Generating...";
+
             // get the data.
             var wakaClient = new WakaClient(start.wakaKeyInput.Text);
             var insights = await wakaClient.GetUserInsights(start.wakaUserInput.Text, start.wakaYearCombo.SelectedItem.Text);
@@ -80,6 +82,7 @@ namespace WakaSkies.Desktop
             {
                 start.errorText.Text = $"Error: {insights.ErrorData.Reason}";
                 start.errorText.Visible = true;
+                start.generateButton.Text = "Generate Model!";
                 return false;
             }
 
@@ -91,6 +94,7 @@ namespace WakaSkies.Desktop
             catch (Exception ex)
             {
                 start.errorText.Text = $"Error: {ex.Message}";
+                start.generateButton.Text = "Generate Model!";
                 start.errorText.Visible = true;
                 return false;
             }
@@ -116,6 +120,7 @@ namespace WakaSkies.Desktop
                 }
             }
 
+            start.generateButton.Text = "Generate Model!";
             camera.StartRotation();
             return true;
         }
