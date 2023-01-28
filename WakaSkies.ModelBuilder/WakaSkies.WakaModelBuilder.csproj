@@ -7,7 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\0 text.stl" />
+    <None Remove="Resources\1 text.stl" />
+    <None Remove="Resources\2 text.stl" />
+    <None Remove="Resources\2013 text.stl" />
+    <None Remove="Resources\2014 text.stl" />
+    <None Remove="Resources\2015 text.stl" />
+    <None Remove="Resources\2016 text.stl" />
+    <None Remove="Resources\2017 text.stl" />
+    <None Remove="Resources\2018 text.stl" />
+    <None Remove="Resources\2019 text.stl" />
+    <None Remove="Resources\2020 text.stl" />
+    <None Remove="Resources\2021 text.stl" />
+    <None Remove="Resources\2022 text.stl" />
+    <None Remove="Resources\2023 text.stl" />
+    <None Remove="Resources\3 text.stl" />
+    <None Remove="Resources\4 text.stl" />
+    <None Remove="Resources\5 text.stl" />
+    <None Remove="Resources\6 text.stl" />
+    <None Remove="Resources\7 text.stl" />
+    <None Remove="Resources\8 text.stl" />
+    <None Remove="Resources\9 text.stl" />
     <None Remove="Resources\base.stl" />
+    <None Remove="Resources\hours text.stl" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,7 +37,29 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\0 text.stl" />
+    <EmbeddedResource Include="Resources\1 text.stl" />
+    <EmbeddedResource Include="Resources\2 text.stl" />
+    <EmbeddedResource Include="Resources\2013 text.stl" />
+    <EmbeddedResource Include="Resources\2014 text.stl" />
+    <EmbeddedResource Include="Resources\2015 text.stl" />
+    <EmbeddedResource Include="Resources\2016 text.stl" />
+    <EmbeddedResource Include="Resources\2017 text.stl" />
+    <EmbeddedResource Include="Resources\2018 text.stl" />
+    <EmbeddedResource Include="Resources\2019 text.stl" />
+    <EmbeddedResource Include="Resources\2020 text.stl" />
+    <EmbeddedResource Include="Resources\2021 text.stl" />
+    <EmbeddedResource Include="Resources\2022 text.stl" />
+    <EmbeddedResource Include="Resources\2023 text.stl" />
+    <EmbeddedResource Include="Resources\3 text.stl" />
+    <EmbeddedResource Include="Resources\4 text.stl" />
+    <EmbeddedResource Include="Resources\5 text.stl" />
+    <EmbeddedResource Include="Resources\6 text.stl" />
+    <EmbeddedResource Include="Resources\7 text.stl" />
+    <EmbeddedResource Include="Resources\8 text.stl" />
+    <EmbeddedResource Include="Resources\9 text.stl" />
     <EmbeddedResource Include="Resources\base.stl" />
+    <EmbeddedResource Include="Resources\hours text.stl" />
   </ItemGroup>
 
 </Project>
