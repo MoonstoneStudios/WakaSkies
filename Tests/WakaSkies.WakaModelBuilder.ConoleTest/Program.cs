@@ -37,7 +37,7 @@ namespace WakaSkies.WakaModelBuilder.ConoleTest
             }
             else
             {
-                WriteLine($"An error occured: {(int)response.ErrorData.StatusCode} {response.ErrorData.Reason}.");
+                WriteLine($"An error occured: {response.ErrorData.Reason}.");
             }
             WriteLine("Press any key to quit.");
             ReadKey();
