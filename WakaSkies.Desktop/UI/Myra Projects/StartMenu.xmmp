@@ -2,7 +2,8 @@
   <VerticalStackPanel Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="15" Background="#00000080">
     <HorizontalStackPanel>
       <Label Text="WakaTime API Key:" Margin="0, 0, 15, 0" />
-      <TextBox MinWidth="300" MaxWidth="300" Width="300" Id="wakaKeyInput" />
+      <TextBox MinWidth="300" MaxWidth="300" Width="300" VerticalAlignment="Center" Id="wakaKeyInput" />
+      <TextButton Text="?" MinWidth="25" MaxWidth="25" MinHeight="25" MaxHeight="25" Margin="3, 0, 0, 0" Id="wakaUnsureButton" />
     </HorizontalStackPanel>
     <HorizontalStackPanel>
       <Label Text="WakaTime User Name:" Margin="0, 0, 15, 0" />

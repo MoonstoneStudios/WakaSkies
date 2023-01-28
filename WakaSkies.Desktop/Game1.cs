@@ -6,8 +6,10 @@ using Myra;
 using Myra.Assets;
 using Myra.Graphics2D.UI.File;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using WakaSkies.Desktop.UI;
 using WakaSkies.WakaAPI;
 using WakaSkies.WakaModelBuilder;
@@ -176,8 +178,43 @@ namespace WakaSkies.Desktop
                     AddIconsUI();
                 }
             };
+
+            startMenu.wakaUnsureButton.Click += (s, e) =>
+            {
+                OpenBrowser("https://wakatime.com/api-key");
+            };
+
             ui.Root = startMenu;
         }
 
+        // credit: https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
+        private void OpenBrowser(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", url);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
     }
 }
