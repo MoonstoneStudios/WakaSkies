@@ -34,6 +34,14 @@
   <ItemGroup>
     <Folder Include="Content\bin\DesktopGL\Content\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Content\download.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\home.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />

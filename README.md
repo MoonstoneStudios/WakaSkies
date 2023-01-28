@@ -1,6 +1,10 @@
 # WakaSkies
  GitHub Skylines but for WakaTime!
 
+<a href="https://www.flaticon.com/free-icons/home" title="home icons">Home icons created by Dave Gandy - Flaticon</a>
+
+[Download Icon Source](https://www.iconsdb.com/white-icons/download-2-icon.html)
+
 ### Open-Source Licenses:
 [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 <details>

@@ -1,0 +1,8 @@
+<Project>
+  <Panel>
+    <VerticalStackPanel>
+      <ImageButton Image="../../Content/home.png" ImageWidth="40" ImageHeight="40" Margin="10" Padding="5" Id="homeButton" />
+      <ImageButton Image="../../Content/download.png" ImageWidth="40" ImageHeight="40" Margin="10, 0, 10, 10" Padding="5" Id="downloadButton" />
+    </VerticalStackPanel>
+  </Panel>
+</Project>

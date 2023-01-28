@@ -1,0 +1,10 @@
+<Project>
+  <Grid ShowGridLines="True" VerticalAlignment="Top" Height="40" Background="#0379FF9D" Id="noticeHeader">
+    <Grid.ColumnsProportions>
+      <Proportion Type="Part" Value="20" />
+      <Proportion Type="Part" />
+    </Grid.ColumnsProportions>
+    <Label HorizontalAlignment="Center" VerticalAlignment="Center" Id="noticeText" />
+    <TextButton Text="Close" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" GridColumn="1" Background="#0379FF9D" OverBackground="#026EE89D" Id="closeButton" />
+  </Grid>
+</Project>

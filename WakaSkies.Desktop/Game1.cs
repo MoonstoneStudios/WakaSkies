@@ -3,7 +3,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
+using Myra.Assets;
+using Myra.Graphics2D.UI.File;
 using System;
+using System.IO;
 using WakaSkies.Desktop.UI;
 using WakaSkies.WakaAPI;
 using WakaSkies.WakaModelBuilder;
@@ -36,6 +39,8 @@ namespace WakaSkies.Desktop
 
         MDesktop ui;
 
+        private bool textBoxVisible = true;
+
         private RasterizerState rasterizer = new RasterizerState()
         {
             CullMode = CullMode.None
@@ -65,12 +70,19 @@ namespace WakaSkies.Desktop
             skybox = new Skybox("cubemap", Content);
 
             MyraEnvironment.Game = this;
+            MyraEnvironment.DefaultAssetManager.AssetResolver = 
+                new FileAssetResolver(Path.Combine(Directory.GetCurrentDirectory(), Content.RootDirectory));
             ui = new MDesktop();
+
+            ui.HasExternalTextInput = true;
+            Window.TextInput += (s, a) =>
+            {
+                ui.OnChar(a.Character);
+            };
 
             var startMenu = new StartMenu();
             startMenu.generateButton.Click += GenerateModel;
             ui.Root = startMenu;
-
 
             effect = new BasicEffect(GraphicsDevice);
             effect.VertexColorEnabled = true;
@@ -129,7 +141,44 @@ namespace WakaSkies.Desktop
                 }
             }
 
+            var icons = new Icons();
+            ui.Widgets.Add(icons);
+
+            icons.homeButton.Click += (s, e) =>
+            {
+                start.Visible = true;
+                textBoxVisible = true;
+
+                ui.Widgets.Remove(icons);
+            };
+
+            icons.downloadButton.Click += (s, e) =>
+            {
+                var files = new FileDialog(FileDialogMode.SaveFile)
+                {
+                    Filter = "*.stl"
+                };
+
+                files.Closed += (s, a) =>
+                {
+                    if (!files.Result) return;
+
+                    var serializer = new STLSerializer();
+                    var stl = serializer.Serialize(model);
+
+                    if (!Path.HasExtension(files.FilePath))
+                    {
+                        Path.ChangeExtension(files.FilePath, ".stl");
+                    }
+
+                    File.WriteAllText(files.FilePath, stl);
+                };
+
+                files.ShowModal(ui);
+            };
+
             start.Visible = false;
+            textBoxVisible = false;
         }
 
         protected override async void Update(GameTime gameTime)
@@ -137,7 +186,7 @@ namespace WakaSkies.Desktop
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (verts != null)
+            if (verts != null && !textBoxVisible)
             {
                 var k = Keyboard.GetState();
                 if (k.IsKeyDown(Keys.A)) pos.X -= 0.1f;

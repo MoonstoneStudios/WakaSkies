@@ -93,7 +93,7 @@ namespace WakaSkies.WakaAPI
             {
                 wakaResponse = JsonConvert.DeserializeObject<WakaResponse>(content);
             }
-            catch(Exception e)
+            catch
             {
                 // return an unsuccessful object.
                 return new WakaResponse()
