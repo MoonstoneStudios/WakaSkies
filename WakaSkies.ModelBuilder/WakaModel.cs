@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,17 @@ namespace WakaSkies.WakaModelBuilder
         private int faceCount = 0;
         private int vertexCount = 0;
 
+        private float minX;
+        private float maxX;
+
+        /// <summary>
+        /// The width of the model.
+        /// </summary>
+        public float Width
+        {
+            get => maxX - minX;
+        }
+
         public WakaModel(int triangleCount)
         {
             Faces = new TriangleFace[triangleCount];
@@ -42,7 +54,23 @@ namespace WakaSkies.WakaModelBuilder
             Faces[faceCount++] = face;
             foreach (var point in face.Points)
             {
+                if (point.X < minX) minX = point.X;
+                if (point.X > maxX) maxX = point.X;
                 Vertices[vertexCount++] = point;
+            }
+        }
+
+        public void ShiftModel(Vector3 amount)
+        {
+            for (int i = 0; i < Vertices.Length; i++)
+            {
+                Vertices[i] += amount;
+            }
+            for (int i = 0; i < Faces.Length; i++)
+            {
+                Faces[i].Points[0] += amount;
+                Faces[i].Points[1] += amount;
+                Faces[i].Points[2] += amount;
             }
         }
 
@@ -66,6 +94,27 @@ namespace WakaSkies.WakaModelBuilder
                 newModel.AddTriangle(b.Faces[i]);
             }
             return newModel;
+        }
+
+        /// <summary>
+        /// Load a model from a file.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static WakaModel LoadFromFile(string fileName)
+        {
+            // https://stackoverflow.com/a/3314213
+            var assem = Assembly.GetExecutingAssembly();
+            string file = "";
+
+            using (var stream = assem.GetManifestResourceStream($"WakaSkies.WakaModelBuilder.Resources.{fileName}.stl"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                file = reader.ReadToEnd();
+            }
+
+            var serializer = new STLSerializer();
+            return serializer.Deserialize(file);
         }
 
     }

@@ -31,8 +31,9 @@ namespace WakaSkies.WakaModelBuilder
         /// The <see cref="WakaResponse"/> returned by 
         /// <see cref="WakaClient.GetUserInsights(string, string, string?)"/>.
         /// </param>
+        /// <param name="addText">If 3D text should be added.</param>
         /// <returns>A brand new triangulated <see cref="WakaModel"/>.</returns>
-        public WakaModel BuildModel(WakaResponse response)
+        public WakaModel BuildModel(WakaResponse response, bool addText = false)
         {
             if (!response.Successful) return null;
 
@@ -82,7 +83,17 @@ namespace WakaSkies.WakaModelBuilder
             }
 
             var model = Triangulate(prisms);
-            return AppendBase(model);
+            var modelWithBase = AppendBase(model);
+
+            if (addText)
+            {
+                var numberBuilder = new NumberModelBuilder();
+                return numberBuilder.AddNumbers(modelWithBase, response, response.Data.Days[0].Date.Year.ToString());
+            }
+            else
+            {
+                return modelWithBase;
+            }
         }
 
         /// <summary>

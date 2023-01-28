@@ -89,7 +89,7 @@ namespace WakaSkies.Desktop
             try
             {
                 // build the model.
-                model = modelBuilder.BuildModel(insights);
+                model = modelBuilder.BuildModel(insights, start.generateStats.IsChecked);
             }
             catch (Exception ex)
             {
