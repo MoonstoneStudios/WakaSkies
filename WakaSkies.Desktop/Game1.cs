@@ -76,7 +76,7 @@ namespace WakaSkies.Desktop
 
         protected override async void Update(GameTime gameTime)
         {
-            camera.Update(gameTime);   
+            camera.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -133,17 +133,42 @@ namespace WakaSkies.Desktop
                 {
                     if (!files.Result) return;
 
-                    // serialize.
-                    var serializer = new STLSerializer();
-                    var stl = serializer.Serialize(modelManager.model);
-
-                    if (!Path.HasExtension(files.FilePath))
+                    try
                     {
-                        Path.ChangeExtension(files.FilePath, ".stl");
-                    }
+                        // serialize.
+                        var serializer = new STLSerializer();
+                        var stl = serializer.Serialize(modelManager.model);
 
-                    // write
-                    File.WriteAllText(files.FilePath, stl);
+                        if (!Path.HasExtension(files.FilePath))
+                        {
+                            Path.ChangeExtension(files.FilePath, ".stl");
+                        }
+
+                        // write
+                        File.WriteAllText(files.FilePath, stl);
+
+                        var notice = new NoticeWindow();
+                        notice.contentLabel.Text = $"{Path.GetFileName(files.FilePath)} has been exported successfully!";
+                        notice.Title = "Done";
+                        notice.closeButton.Click += (s, a) =>
+                        {
+                            notice.Close();
+                        };
+
+                        notice.Show(ui);
+                    }
+                    catch(Exception ex)
+                    {
+                        var notice = new NoticeWindow();
+                        notice.contentLabel.Text = $"An error occurred while trying to save the file. Error: {ex.Message}";
+                        notice.Title = "Error";
+                        notice.closeButton.Click += (s, a) =>
+                        {
+                            notice.Close();
+                        };
+
+                        notice.Show(ui);
+                    }
                 };
 
                 files.ShowModal(ui);
@@ -185,6 +210,21 @@ namespace WakaSkies.Desktop
             };
 
             ui.Root = startMenu;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) 
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                var header = new NoticeHeader();
+                header.noticeText.Text = "WakaSkies has not yet been tested on your operating system. " +
+                    "If bugs appear, a PR to the GitHub repo would be amazing!";
+                header.closeButton.Click += (s, a) =>
+                {
+                    ui.Widgets.Remove(header);
+                };
+
+                ui.Widgets.Add(header);
+            }
+
         }
 
         // credit: https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/

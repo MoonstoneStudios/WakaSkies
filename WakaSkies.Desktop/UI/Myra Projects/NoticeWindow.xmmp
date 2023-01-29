@@ -1,0 +1,8 @@
+<Project>
+  <Window Title="" Left="568" Top="237" Width="300" Height="150">
+    <Panel>
+      <Label Wrap="True" HorizontalAlignment="Center" Id="contentLabel" />
+      <TextButton Text="Close" Margin="5" Padding="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Id="closeButton" />
+    </Panel>
+  </Window>
+</Project>

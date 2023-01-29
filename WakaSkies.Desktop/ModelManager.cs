@@ -30,6 +30,11 @@ namespace WakaSkies.Desktop
             CullMode = CullMode.None
         };
 
+        // store last used values to prevent regenerating when it is not needed.
+        private string prevUserName;
+        private string prevYear;
+        private bool prevStats;
+
         public void LoadContent(GraphicsDevice device)
         {
             // setup the effect.
@@ -69,6 +74,16 @@ namespace WakaSkies.Desktop
                 start.errorText.Text = "Error: some required information is missing.";
                 start.errorText.Visible = true;
                 return false;
+            }
+
+            // dont regenerate if same info is entered.
+            if (prevUserName == start.wakaUserInput.Text
+                && prevYear == start.wakaYearCombo.SelectedItem.Text
+                && prevStats == start.generateStats.IsChecked)
+            {
+                start.Visible = false;
+                camera.StartRotation();
+                return true;
             }
 
             start.generateButton.Text = "Generating...";
@@ -120,8 +135,13 @@ namespace WakaSkies.Desktop
                 }
             }
 
+            prevUserName = start.wakaUserInput.Text;
+            prevYear = start.wakaYearCombo.SelectedItem.Text;
+            prevStats = start.generateStats.IsChecked;
+
             start.generateButton.Text = "Generate Model!";
             camera.StartRotation();
+            camera.UpdateWorld(model.Width);
             return true;
         }
 
