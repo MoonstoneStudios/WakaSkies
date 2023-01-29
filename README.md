@@ -870,3 +870,4 @@ GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoG
 ### Other Credits
 - [Riemer's 2D & 3D Monogame Tutorials](https://github.com/SimonDarksideJ/XNAGameStudio/wiki/RiemersArchiveOverview)
 - [Process.Start for URLs on .NET Core](https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/)
+- [RB Whitaker's Wiki](http://rbwhitaker.wikidot.com/3d-tutorials)
