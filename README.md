@@ -10,7 +10,8 @@ GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoG
 - `WakaSkies.Desktop` - This is the app that can be run on the computer.
 - `Tests/` - A directory full of API and ModelBuilder tests.
 
-
+# Important
+This app has only been tested on a Windows computer.
 
 ### Image/Icon Credits:
 - [Home icons created by Dave Gandy - Flaticon](https://www.flaticon.com/free-icons/home)
