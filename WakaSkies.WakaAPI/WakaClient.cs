@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Net;
 
 namespace WakaSkies.WakaAPI
 {
@@ -77,11 +78,32 @@ namespace WakaSkies.WakaAPI
             // check if failed.
             if (!response.IsSuccessStatusCode)
             {
+                var tip = "";
+                
+                // add a little tip for the user if they get these errors.
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Forbidden:
+                        tip = "Your API key is not valid for this user.";
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        tip = "Your API key is not valid.";
+                        break;
+                    case HttpStatusCode.TooManyRequests:
+                        tip = "WakaTime has received too many requests and you have been rate limited.";
+                        break;
+                    case HttpStatusCode.InternalServerError:
+                        tip = "An error happened on WakaTime's side.";
+                        break;
+                    default:
+                        break;
+                }
+
                 // return an unsuccessful object.
                 return new WakaResponse()
                 {
                     Successful = false,
-                    ErrorData = new ErrorData($"{response.StatusCode:D} {response.ReasonPhrase}.")
+                    ErrorData = new ErrorData($"{response.StatusCode:D} {response.ReasonPhrase}." + tip)
                 };
             }
 
