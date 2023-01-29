@@ -41,11 +41,11 @@ namespace WakaSkies.Desktop
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            Window.Title = "WakaSkies Beta 1.0.0";
         }
 
         protected override void Initialize()
         {
+            Window.Title = "WakaSkies 1.0.0";
             GraphicsDevice.PresentationParameters.BackBufferWidth = 1280;
             GraphicsDevice.PresentationParameters.BackBufferHeight = 720;
 

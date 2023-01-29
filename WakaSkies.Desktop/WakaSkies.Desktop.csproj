@@ -9,6 +9,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <AssemblyName>WakaSkies Desktop</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\Content.mgcb" />
