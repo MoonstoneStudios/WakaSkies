@@ -11,7 +11,15 @@ GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoG
 - `Tests/` - A directory full of API and ModelBuilder tests.
 
 # Important
-This app has only been tested on a Windows computer.
+This app has only been tested on a Windows computer. I am not a verified Apple developer either so it may not work at all on MacOS. 
+But, a website release is planned so stay tuned!
+
+# Roadmap/Ideas for future releases
+- Website release is planned.
+- Add more settings in 1.1.0 release
+- UI redesign?
+- Music???
+
 
 ### Image/Icon Credits:
 - [Home icons created by Dave Gandy - Flaticon](https://www.flaticon.com/free-icons/home)
