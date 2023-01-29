@@ -8,7 +8,7 @@ using WakaSkies.WakaAPI;
 
 namespace WakaSkies.WakaModelBuilder
 {
-    internal class NumberModelBuilder
+    internal class StaticticModelBuilder
     {
 
         /// <summary>
@@ -18,16 +18,23 @@ namespace WakaSkies.WakaModelBuilder
         /// <param name="response">The waka response.</param>
         /// <param name="year">The year string.</param>
         /// <returns>A model with the stats attached.</returns>
-        public WakaModel AddNumbers(WakaModel model, WakaResponse response, string year)
+        public WakaModel AddStats(WakaModel model, WakaResponse response, string year)
         {
             string yearFile = $"{year} text";
             string hoursFile = "hours text";
             // get the total hours.
             int totalHours = TotalHours(response);
 
+            var wakaLogo = WakaModel.LoadFromFile("wakalogo");
+            var x = wakaLogo.Width;
+
+            // add a space
+            x += 1;
+
             // find the year model.
             var yearModel = WakaModel.LoadFromFile(yearFile);
-            var x = yearModel.Width;
+            yearModel.ShiftModel(new Vector3(x, 0, 0));
+            x += yearModel.Width;
 
             // add a space.
             x += 1;
@@ -35,6 +42,7 @@ namespace WakaSkies.WakaModelBuilder
             // a list of generated models.
             List<WakaModel> generatedModels = new List<WakaModel>
             {
+                wakaLogo,
                 yearModel
             };
 
