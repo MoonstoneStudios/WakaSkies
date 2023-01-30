@@ -2,7 +2,7 @@
 
 <img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/wakaskies%20logo.png?raw=true)" width="150px" height="150px" />
 
-GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoGame](https://www.monogame.net/) for the desktop client.
+GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoGame](https://www.monogame.net/) for the desktop client. [Take me to the downloads!](https://github.com/MoonstoneStudios/WakaSkies/releases)
 
 ## Project Breakdown
 - `WakaSkies.WakaAPI` - This project houses the code related to making a request to WakaTime and loading it.
