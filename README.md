@@ -14,12 +14,18 @@ GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoG
 This app has only been tested on a Windows computer. I am not a verified Apple developer either so it may not work at all on MacOS. 
 But, a website release is planned so stay tuned!
 
+# Screenshots
+<img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/Images/screenshot1.png?raw=true)" width="600px" />
+<img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/Images/screenshot2.png?raw=true)" width="600px" />
+
 # Roadmap/Ideas for future releases
 - Website release is planned.
+- Better renderer
+- Preformance updates (ex: using indices to render)
 - Add more settings in 1.1.0 release
 - UI redesign?
 - Music???
-
+- Binary STL serialization
 
 ### Image/Icon Credits:
 - [Home icons created by Dave Gandy - Flaticon](https://www.flaticon.com/free-icons/home)
