@@ -21,11 +21,7 @@ But, a website release is planned so stay tuned!
 # Roadmap/Ideas for future releases
 - Website release is planned.
 - Better renderer
-- Preformance updates (ex: using indices to render)
-- Add more settings in 1.1.0 release
-- UI redesign?
-- Music???
-- Binary STL serialization
+- See [the project board](https://github.com/users/MoonstoneStudios/projects/1)
 
 ### Image/Icon Credits:
 - [Home icons created by Dave Gandy - Flaticon](https://www.flaticon.com/free-icons/home)
