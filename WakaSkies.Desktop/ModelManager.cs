@@ -104,7 +104,12 @@ namespace WakaSkies.Desktop
             try
             {
                 // build the model.
-                model = modelBuilder.BuildModel(insights, start.generateStats.IsChecked);
+                var settings = new ModelBuildSettings()
+                {
+                    Response = insights,
+                    AddStatistics = start.generateStats.IsChecked
+                };
+                model = modelBuilder.BuildModel(settings);
             }
             catch (Exception ex)
             {
