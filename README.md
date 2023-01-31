@@ -20,7 +20,6 @@ But, a website release is planned so stay tuned!
 
 # Roadmap/Ideas for future releases
 - Website release is planned.
-- Better renderer
 - See [the project board](https://github.com/users/MoonstoneStudios/projects/1)
 
 ### Image/Icon Credits:
