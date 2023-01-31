@@ -8,6 +8,7 @@ Once it has been discussed, you can now make a PR. (See [Making the PR](#making-
 
 ## Bug Fixes and Optimizations
 Most bug fixes and code optimizations do not need an Issue created. Please make a PR and state the changes made and how it makes the code better.
+If you fixed a problem from someone's bug report, please link to the Issue.
 
 ## Discoverd a Bug?
 Please make an Issue and provide as much information as you can.
