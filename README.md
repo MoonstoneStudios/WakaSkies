@@ -22,6 +22,8 @@ But, a website release is planned so stay tuned!
 - Website release is planned.
 - See [the project board](https://github.com/users/MoonstoneStudios/projects/1)
 
+# Licenses and Credit
+
 ### Image/Icon Credits:
 - [Home icons created by Dave Gandy - Flaticon](https://www.flaticon.com/free-icons/home)
 - [Download Icon Source](https://www.iconsdb.com/white-icons/download-2-icon.html)
