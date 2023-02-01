@@ -35,6 +35,8 @@ namespace WakaSkies.Desktop
         private string prevYear;
         private bool prevStats;
 
+        public ModelBuildSettings buildSettings;
+
         public void LoadContent(GraphicsDevice device)
         {
             // setup the effect.
@@ -46,6 +48,7 @@ namespace WakaSkies.Desktop
             device.RasterizerState = rasterizer;
 
             modelBuilder = new ModelBuilder();
+            buildSettings = new ModelBuildSettings();
         }
 
         public void Draw(GraphicsDevice graphicsDevice, Camera camera)
@@ -78,8 +81,7 @@ namespace WakaSkies.Desktop
 
             // dont regenerate if same info is entered.
             if (prevUserName == start.wakaUserInput.Text
-                && prevYear == start.wakaYearCombo.SelectedItem.Text
-                && prevStats == start.generateStats.IsChecked)
+                && prevYear == start.wakaYearCombo.SelectedItem.Text)
             {
                 start.Visible = false;
                 camera.StartRotation();
@@ -104,12 +106,10 @@ namespace WakaSkies.Desktop
             try
             {
                 // build the model.
-                var settings = new ModelBuildSettings()
-                {
-                    Response = insights,
-                    AddStatistics = start.generateStats.IsChecked
-                };
-                model = modelBuilder.BuildModel(settings);
+                buildSettings.Response = insights;
+                //buildSettings.AddStatistics = start.generateStats.IsChecked;
+
+                model = modelBuilder.BuildModel(buildSettings);
             }
             catch (Exception ex)
             {
@@ -142,13 +142,15 @@ namespace WakaSkies.Desktop
 
             prevUserName = start.wakaUserInput.Text;
             prevYear = start.wakaYearCombo.SelectedItem.Text;
-            prevStats = start.generateStats.IsChecked;
+            //prevStats = start.generateStats.IsChecked;
 
             start.generateButton.Text = "Generate Model!";
+            start.errorText.Text = "";
+            start.errorText.Visible = false;
+
             camera.StartRotation();
             camera.UpdateWorld(model.Width);
             return true;
         }
-
     }
 }

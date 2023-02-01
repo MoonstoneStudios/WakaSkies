@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Assets;
+using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.File;
+using Myra.Graphics2D.UI.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using WakaSkies.Desktop.GUI;
 using WakaSkies.Desktop.UI;
 using WakaSkies.WakaAPI;
 using WakaSkies.WakaModelBuilder;
@@ -24,6 +27,7 @@ namespace WakaSkies.Desktop
         private SpriteBatch spriteBatch;
 
         private MDesktop ui;
+        private MoreSettings moreSettings;
         private bool textBoxVisible = true;
 
         private Camera camera;
@@ -224,6 +228,35 @@ namespace WakaSkies.Desktop
 
                 ui.Widgets.Add(header);
             }
+
+            moreSettings = new MoreSettings();
+
+            startMenu.moreSettings.Click += (s, a) =>
+            {
+                startMenu.moreSettings.Enabled = false;
+
+                moreSettings.ShowModal(ui);
+            };
+
+            moreSettings.Closed += (s, a) =>
+            {
+                if (moreSettings.Result)
+                {
+                    modelManager.buildSettings = new ModelBuildSettings()
+                    {
+                        AddStatistics = moreSettings.generateStats.IsChecked,
+                        RoundToNearestHour = moreSettings.roundHour.IsChecked,
+                        MinumimHours = (int)moreSettings.minHours.Value,
+                        MinimumBarHeight = (int)moreSettings.minHeight.Value,
+                        MaximumBarHeight = (int)moreSettings.maxHeight.Value,
+                        AddBorder = moreSettings.addBorder.IsChecked
+                    };
+                }
+
+                startMenu.moreSettings.Enabled = true;
+            };
+
+            
 
         }
 

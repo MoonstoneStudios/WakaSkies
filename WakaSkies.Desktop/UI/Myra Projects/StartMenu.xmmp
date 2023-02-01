@@ -25,7 +25,7 @@
         <ListItem Text="2013" />
       </ComboBox>
     </HorizontalStackPanel>
-    <CheckBox IsChecked="True" Text="Add Stats To Model (takes longer)  " TextPosition="Left" Id="generateStats" />
+    <TextButton Text="Advanced Settings" Padding="5" Id="moreSettings" />
     <Label Wrap="True" TextAlign="Center" TextColor="#FF5E6EFF" MaxWidth="400" HorizontalAlignment="Center" Visible="False" Id="errorText" />
     <TextButton Text="Generate Model!" PressedBackground="#4242A6FF" Height="45" HorizontalAlignment="Stretch" Background="#5756D5FF" OverBackground="#4F4FC4FF" Id="generateButton" />
   </VerticalStackPanel>
