@@ -10,12 +10,22 @@ namespace WakaSkies.WakaModelBuilder
     /// <summary>
     /// Settings for building the WakaTime model.
     /// </summary>
-    public class ModelBuildSettings
+    public struct ModelBuildSettings
     {
         /// <summary>
         /// The response from WakaTime.
         /// </summary>
-        public WakaResponse Response { get; set; }
+        public WakaResponse Response { get; set; } = null;
+
+        /// <summary>
+        /// The year.
+        /// </summary>
+        public string Year { get; set; } = null;
+
+        /// <summary>
+        /// The timeout.
+        /// </summary>
+        public int? Timeout { get; set; } = null;
 
         /// <summary>
         /// Add statistics to side of model.
@@ -25,17 +35,17 @@ namespace WakaSkies.WakaModelBuilder
         /// <summary>
         /// If the <see cref="RectangularPrism"/> heights should be rounded to the nearest hour.
         /// </summary>
-        public bool RoundToNearestHour { get; set; }
+        public bool RoundToNearestHour { get; set; } = false;
 
         /// <summary>
         /// The minimum amount of hours needed for a <see cref="RectangularPrism"/> to be added to the model.
         /// </summary>
-        public int MinumimHours { get; set; }
+        public int MinumimHours { get; set; } = 0;
 
         /// <summary>
         /// The minimum height for a <see cref="RectangularPrism"/> (other than 0).
         /// </summary>
-        public int MinimumBarHeight { get; set; }
+        public int MinimumBarHeight { get; set; } = 0;
 
         /// <summary>
         /// The maximum height of a <see cref="RectangularPrism"/>.
@@ -46,5 +56,27 @@ namespace WakaSkies.WakaModelBuilder
         /// If a border should be added.
         /// </summary>
         public bool AddBorder { get; set; } = true;
+
+        public ModelBuildSettings()
+        {
+            
+        }
+
+        public static bool operator ==(ModelBuildSettings a, ModelBuildSettings b)
+        {
+            return a.AddStatistics == b.AddStatistics &&
+                a.Year == b.Year &&
+                a.Timeout == b.Timeout &&
+                a.RoundToNearestHour == b.RoundToNearestHour &&
+                a.MinumimHours == b.MinumimHours &&
+                a.MinimumBarHeight == b.MinimumBarHeight &&
+                a.MaximumBarHeight == b.MaximumBarHeight &&
+                a.AddBorder == b.AddBorder;
+        }
+
+        public static bool operator !=(ModelBuildSettings a, ModelBuildSettings b)
+        {
+            return !(a == b);
+        }
     }
 }

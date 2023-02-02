@@ -105,6 +105,8 @@ namespace WakaSkies.Desktop
         public void StartRotation()
         {
             rotate = true;
+            pausedRotation = false;
+            rotateTimer = 0;
         }
 
         /// <summary>

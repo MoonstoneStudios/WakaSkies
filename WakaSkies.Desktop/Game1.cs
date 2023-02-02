@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using WakaSkies.Desktop.GUI;
 using WakaSkies.Desktop.UI;
 using WakaSkies.WakaAPI;
 using WakaSkies.WakaModelBuilder;
@@ -238,6 +237,11 @@ namespace WakaSkies.Desktop
                 moreSettings.ShowModal(ui);
             };
 
+            moreSettings.useDefaultTimeout.Click += (s, a) =>
+            {
+                moreSettings.timeoutOptions.Visible = !moreSettings.useDefaultTimeout.IsChecked;
+            };
+
             moreSettings.Closed += (s, a) =>
             {
                 if (moreSettings.Result)
@@ -249,7 +253,8 @@ namespace WakaSkies.Desktop
                         MinumimHours = (int)moreSettings.minHours.Value,
                         MinimumBarHeight = (int)moreSettings.minHeight.Value,
                         MaximumBarHeight = (int)moreSettings.maxHeight.Value,
-                        AddBorder = moreSettings.addBorder.IsChecked
+                        AddBorder = moreSettings.addBorder.IsChecked,
+                        Timeout = moreSettings.useDefaultTimeout.IsChecked ? null : (int)moreSettings.timeout.Value
                     };
                 }
 

@@ -96,7 +96,7 @@ namespace WakaSkies.WakaModelBuilder
             if (addText)
             {
                 var numberBuilder = new StaticticModelBuilder();
-                return numberBuilder.AddStats(modelWithBase, response, response.Data.Days[0].Date.Year.ToString());
+                return numberBuilder.AddStats(modelWithBase, response, settings.Year.ToString());
             }
             else
             {
