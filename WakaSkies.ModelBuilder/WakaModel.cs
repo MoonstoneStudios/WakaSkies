@@ -105,16 +105,14 @@ namespace WakaSkies.WakaModelBuilder
         {
             // https://stackoverflow.com/a/3314213
             var assem = Assembly.GetExecutingAssembly();
-            string file = "";
+            WakaModel file;
 
             using (var stream = assem.GetManifestResourceStream($"WakaSkies.WakaModelBuilder.Resources.{fileName}.stl"))
-            using (StreamReader reader = new StreamReader(stream))
             {
-                file = reader.ReadToEnd();
+                var serializer = new STLSerializer();
+                return serializer.DeserializeBinary(stream);
             }
 
-            var serializer = new STLSerializer();
-            return serializer.Deserialize(file);
         }
 
     }
