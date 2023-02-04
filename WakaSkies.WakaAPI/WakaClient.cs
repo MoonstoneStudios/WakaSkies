@@ -55,7 +55,7 @@ namespace WakaSkies.WakaAPI
         /// <param name="year">The year to grab in YYYY format.</param>
         /// <param name="timeout">The optional keystroke timeout to get.</param>
         /// <returns>A new <see cref="WakaResponse"/>.</returns>
-        public async Task<WakaResponse> GetUserInsights(string userName, string year, string? timeout = null)
+        public async Task<WakaResponse> GetUserInsights(string userName, string year, int? timeout = null)
         {
             // check year.
             if (year.Length != 4 || !int.TryParse(year, out int _))

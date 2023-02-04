@@ -35,6 +35,9 @@ namespace WakaSkies.Desktop
         private string prevYear;
         private bool prevStats;
 
+        public ModelBuildSettings buildSettings;
+        private ModelBuildSettings lastSettings;
+
         public void LoadContent(GraphicsDevice device)
         {
             // setup the effect.
@@ -46,6 +49,7 @@ namespace WakaSkies.Desktop
             device.RasterizerState = rasterizer;
 
             modelBuilder = new ModelBuilder();
+            buildSettings = new ModelBuildSettings();
         }
 
         public void Draw(GraphicsDevice graphicsDevice, Camera camera)
@@ -76,10 +80,10 @@ namespace WakaSkies.Desktop
                 return false;
             }
 
+            buildSettings.Year = start.wakaYearCombo.SelectedItem.Text;
+
             // dont regenerate if same info is entered.
-            if (prevUserName == start.wakaUserInput.Text
-                && prevYear == start.wakaYearCombo.SelectedItem.Text
-                && prevStats == start.generateStats.IsChecked)
+            if (buildSettings == lastSettings)
             {
                 start.Visible = false;
                 camera.StartRotation();
@@ -90,7 +94,9 @@ namespace WakaSkies.Desktop
 
             // get the data.
             var wakaClient = new WakaClient(start.wakaKeyInput.Text);
-            var insights = await wakaClient.GetUserInsights(start.wakaUserInput.Text, start.wakaYearCombo.SelectedItem.Text);
+            var insights = await wakaClient.GetUserInsights(start.wakaUserInput.Text, 
+                start.wakaYearCombo.SelectedItem.Text, buildSettings.Timeout);
+
 
             // check for success.
             if (!insights.Successful)
@@ -104,7 +110,10 @@ namespace WakaSkies.Desktop
             try
             {
                 // build the model.
-                model = modelBuilder.BuildModel(insights, start.generateStats.IsChecked);
+                buildSettings.Response = insights;
+                //buildSettings.AddStatistics = start.generateStats.IsChecked;
+
+                model = modelBuilder.BuildModel(buildSettings);
             }
             catch (Exception ex)
             {
@@ -135,15 +144,15 @@ namespace WakaSkies.Desktop
                 }
             }
 
-            prevUserName = start.wakaUserInput.Text;
-            prevYear = start.wakaYearCombo.SelectedItem.Text;
-            prevStats = start.generateStats.IsChecked;
+            lastSettings = buildSettings;
 
             start.generateButton.Text = "Generate Model!";
+            start.errorText.Text = "";
+            start.errorText.Visible = false;
+
             camera.StartRotation();
             camera.UpdateWorld(model.Width);
             return true;
         }
-
     }
 }

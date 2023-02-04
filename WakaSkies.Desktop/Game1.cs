@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Assets;
+using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.File;
+using Myra.Graphics2D.UI.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -24,6 +26,7 @@ namespace WakaSkies.Desktop
         private SpriteBatch spriteBatch;
 
         private MDesktop ui;
+        private MoreSettings moreSettings;
         private bool textBoxVisible = true;
 
         private Camera camera;
@@ -55,6 +58,15 @@ namespace WakaSkies.Desktop
                 // change the aspect ratio of the camera.
                 camera.ChangeSize(GraphicsDevice.PresentationParameters.BackBufferWidth,
                     GraphicsDevice.PresentationParameters.BackBufferHeight);
+
+                // center the settings.
+                var moreSettings = (MoreSettings)ui.GetWidgetByID("moreSettingsDialog");
+                if (moreSettings != null)
+                {
+                    // center the center of the window.
+                    moreSettings.Left = (Window.ClientBounds.Width / 2) - (moreSettings.Bounds.Width / 2);
+                    moreSettings.Top = (Window.ClientBounds.Height / 2) - (moreSettings.Bounds.Height / 2);
+                }
             };
 
             base.Initialize();
@@ -224,6 +236,41 @@ namespace WakaSkies.Desktop
 
                 ui.Widgets.Add(header);
             }
+
+            moreSettings = new MoreSettings();
+
+            startMenu.moreSettings.Click += (s, a) =>
+            {
+                startMenu.moreSettings.Enabled = false;
+
+                moreSettings.ShowModal(ui);
+            };
+
+            moreSettings.useDefaultTimeout.Click += (s, a) =>
+            {
+                moreSettings.timeoutOptions.Visible = !moreSettings.useDefaultTimeout.IsChecked;
+            };
+
+            moreSettings.Closed += (s, a) =>
+            {
+                if (moreSettings.Result)
+                {
+                    modelManager.buildSettings = new ModelBuildSettings()
+                    {
+                        AddStatistics = moreSettings.generateStats.IsChecked,
+                        RoundToNearestHour = moreSettings.roundHour.IsChecked,
+                        MinumimHours = (int)moreSettings.minHours.Value,
+                        MinimumBarHeight = (int)moreSettings.minHeight.Value,
+                        MaximumBarHeight = (int)moreSettings.maxHeight.Value,
+                        AddBorder = moreSettings.addBorder.IsChecked,
+                        Timeout = moreSettings.useDefaultTimeout.IsChecked ? null : (int)moreSettings.timeout.Value
+                    };
+                }
+
+                startMenu.moreSettings.Enabled = true;
+            };
+
+            
 
         }
 

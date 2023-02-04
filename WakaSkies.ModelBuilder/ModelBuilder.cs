@@ -27,24 +27,23 @@ namespace WakaSkies.WakaModelBuilder
         /// <summary>
         /// Build the model.
         /// </summary>
-        /// <param name="response">
-        /// The <see cref="WakaResponse"/> returned by 
-        /// <see cref="WakaClient.GetUserInsights(string, string, string?)"/>.
-        /// </param>
-        /// <param name="addText">If 3D text should be added.</param>
+        /// <param name="settings">The build settings.</param>
         /// <returns>A brand new triangulated <see cref="WakaModel"/>.</returns>
-        public WakaModel BuildModel(WakaResponse response, bool addText = false)
+        public WakaModel BuildModel(ModelBuildSettings settings)
         {
+            var response = settings.Response;
+            var addText = settings.AddStatistics;
+
             if (!response.Successful) return null;
 
             List<RectangularPrism> prisms = new List<RectangularPrism>();
 
             // the first day to start on
-            int firstDay = 0;
+            int firstDay;
             // the current week.
             int currentWeek = 0;
             // the current day 0-6.
-            int currentDay = 0;
+            int currentDay;
 
             var yearData = response.Data.Days[0].Date;
             firstDay = (int)yearData.DayOfWeek;
@@ -57,23 +56,26 @@ namespace WakaSkies.WakaModelBuilder
                 // for now, the base is positioned in the -Ys.
                 var position = new Vector3(currentWeek, -currentDay - 1, BOTTOM_OF_MODEL);
                 // divide by 3600 to find hours.
-                var height = (int)Math.Round(day.Total / 3600f);
+                var hours = day.Total / 3600f;
 
-                ////if less than half hour skip.
-                //if (height < 0.5)
-                //{
-                //    currentDay++;
-                //    if (currentDay >= 7)
-                //    {
-                //        currentDay = 0;
-                //        currentWeek++;
-                //    }
-                //    continue;
-                //}
+                // round first.
+                if (settings.RoundToNearestHour)
+                {
+                    hours = Math.Round(hours);
+                }
 
-                var prism = new RectangularPrism(height, position);
-                prisms.Add(prism);
+                // add prism if it is above 0 and the minimum.
+                if (hours >= settings.MinumimHours && hours > 0)
+                {
+                    // get the clamped height.
+                    var height = MathF.Max(settings.MinimumBarHeight, (float)hours);
+                    height = MathF.Min(settings.MaximumBarHeight, height);
 
+                    var prism = new RectangularPrism(height, position);
+                    prisms.Add(prism);
+                }
+
+                // increment.
                 currentDay++;
                 if (currentDay >= 7)
                 {
@@ -85,10 +87,16 @@ namespace WakaSkies.WakaModelBuilder
             var model = Triangulate(prisms);
             var modelWithBase = AppendBase(model);
 
+            if (settings.AddBorder)
+            {
+                var border = WakaModel.LoadFromFile("modelborder");
+                modelWithBase = WakaModel.CombineModels(modelWithBase, border);
+            }
+
             if (addText)
             {
                 var numberBuilder = new StaticticModelBuilder();
-                return numberBuilder.AddStats(modelWithBase, response, response.Data.Days[0].Date.Year.ToString());
+                return numberBuilder.AddStats(modelWithBase, response, settings.Year.ToString());
             }
             else
             {

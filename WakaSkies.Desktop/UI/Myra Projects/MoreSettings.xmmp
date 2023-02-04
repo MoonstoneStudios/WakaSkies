@@ -1,0 +1,26 @@
+<Project>
+  <Dialog Title="More Settings" MinWidth="500" MinHeight="300" Id="moreSettingsDialog" >
+    <VerticalStackPanel Spacing="5" Margin="10, 0">
+      <CheckBox IsChecked="True" Text="Add Stats To Model (takes longer)  " TextPosition="Left" Id="generateStats" />
+      <CheckBox Text="Round To Nearest Hour  " TextPosition="Left" Id="roundHour" />
+      <HorizontalStackPanel>
+        <Label Text="Minimum Hours" Margin="0, 0, 10, 0" />
+        <SpinButton Maximum="12" Minimum="0" Value="0" Integer="True" MinWidth="100" Id="minHours" />
+      </HorizontalStackPanel>
+      <HorizontalStackPanel>
+        <Label Text="Minimum Height Of Bars (More Than 0 Hours)" Margin="0, 0, 10, 0" />
+        <SpinButton Maximum="3" Minimum="0" Integer="True" MinWidth="100" Id="minHeight" />
+      </HorizontalStackPanel>
+      <HorizontalStackPanel>
+        <Label Text="Maximum Height Of Bars" Margin="0, 0, 10, 0" />
+        <SpinButton Maximum="12" Minimum="4" Value="8" Integer="True" MinWidth="100" Id="maxHeight" />
+      </HorizontalStackPanel>
+      <CheckBox IsChecked="True" Text="Add Border To Base  " TextPosition="Left" Id="addBorder" />
+      <CheckBox IsChecked="True" Text="Use Account's Default Keystroke Timeout  " TextPosition="Left" Id="useDefaultTimeout" />
+      <HorizontalStackPanel Margin="25, 0, 0, 0" Visible="False" Id="timeoutOptions">
+        <Label Text="Keystroke Timeout" Margin="0, 0, 10, 0" />
+        <SpinButton Maximum="250" Minimum="5" Value="15" Integer="True" MinWidth="100" Id="timeout" />
+      </HorizontalStackPanel>
+    </VerticalStackPanel>
+  </Dialog>
+</Project>
