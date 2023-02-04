@@ -17,7 +17,7 @@ namespace WakaSkies.Desktop.UI
 		{
 			generateStats = new CheckBox();
 			generateStats.IsChecked = true;
-			generateStats.Text = "Add Stats To Model (takes longer)  ";
+			generateStats.Text = "Add Stats To Model  ";
 			generateStats.TextPosition = Myra.Graphics2D.UI.ImageTextButton.TextPositionEnum.Left;
 			generateStats.Id = "generateStats";
 

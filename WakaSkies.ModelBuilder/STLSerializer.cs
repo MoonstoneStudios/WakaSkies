@@ -148,8 +148,8 @@ namespace WakaSkies.WakaModelBuilder
         /// <summary>
         /// Load a binary file.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
+        /// <param name="stream">The stream.</param>
+        /// <returns>A new WakaModel.</returns>
         public WakaModel DeserializeBinary(Stream stream)
         {
             //using var stream = new FileStream(filePath, FileMode.Open);

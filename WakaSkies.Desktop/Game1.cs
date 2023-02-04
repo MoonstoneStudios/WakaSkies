@@ -144,9 +144,9 @@ namespace WakaSkies.Desktop
                 var stack = (VerticalStackPanel)files.Content;
                 var exportAsASCII = new CheckBox()
                 {
-                    Text = "Export as ASCII  ",
+                    Text = "Export as ASCII (bigger file size)  ",
                     TextPosition = ImageTextButton.TextPositionEnum.Left,
-                    IsChecked = true,
+                    IsChecked = false,
                     Id = "exportAsASCII"
                 };
                 stack.Widgets.Add(exportAsASCII);

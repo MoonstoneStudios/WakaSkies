@@ -1,7 +1,7 @@
 <Project>
   <Dialog Title="More Settings" MinWidth="500" MinHeight="300" Id="moreSettingsDialog" >
     <VerticalStackPanel Spacing="5" Margin="10, 0">
-      <CheckBox IsChecked="True" Text="Add Stats To Model (takes longer)  " TextPosition="Left" Id="generateStats" />
+      <CheckBox IsChecked="True" Text="Add Stats To Model  " TextPosition="Left" Id="generateStats" />
       <CheckBox Text="Round To Nearest Hour  " TextPosition="Left" Id="roundHour" />
       <HorizontalStackPanel>
         <Label Text="Minimum Hours" Margin="0, 0, 10, 0" />
