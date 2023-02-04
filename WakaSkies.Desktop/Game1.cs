@@ -58,6 +58,15 @@ namespace WakaSkies.Desktop
                 // change the aspect ratio of the camera.
                 camera.ChangeSize(GraphicsDevice.PresentationParameters.BackBufferWidth,
                     GraphicsDevice.PresentationParameters.BackBufferHeight);
+
+                // center the settings.
+                var moreSettings = (MoreSettings)ui.GetWidgetByID("moreSettingsDialog");
+                if (moreSettings != null)
+                {
+                    // center the center of the window.
+                    moreSettings.Left = (Window.ClientBounds.Width / 2) - (moreSettings.Bounds.Width / 2);
+                    moreSettings.Top = (Window.ClientBounds.Height / 2) - (moreSettings.Bounds.Height / 2);
+                }
             };
 
             base.Initialize();
