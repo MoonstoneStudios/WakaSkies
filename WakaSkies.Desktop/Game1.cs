@@ -140,6 +140,17 @@ namespace WakaSkies.Desktop
                     Filter = "*.stl"
                 };
 
+                // add a checkbox
+                var stack = (VerticalStackPanel)files.Content;
+                var exportAsASCII = new CheckBox()
+                {
+                    Text = "Export as ASCII  ",
+                    TextPosition = ImageTextButton.TextPositionEnum.Left,
+                    IsChecked = true,
+                    Id = "exportAsASCII"
+                };
+                stack.Widgets.Add(exportAsASCII);
+
                 // when the file dialog is done.
                 files.Closed += (s, a) =>
                 {
@@ -149,15 +160,20 @@ namespace WakaSkies.Desktop
                     {
                         // serialize.
                         var serializer = new STLSerializer();
-                        var stl = serializer.Serialize(modelManager.model);
 
-                        if (!Path.HasExtension(files.FilePath))
+                        if (exportAsASCII.IsChecked)
                         {
-                            Path.ChangeExtension(files.FilePath, ".stl");
-                        }
+                            // serialize as text.
+                            var stl = serializer.Serialize(modelManager.model);
 
-                        // write
-                        File.WriteAllText(files.FilePath, stl);
+                            // write
+                            File.WriteAllText(files.FilePath, stl);
+                        }
+                        else
+                        {
+                            // serialize as binary.
+                            serializer.SerializeBinary(files.FilePath, modelManager.model);
+                        }
 
                         var notice = new NoticeWindow();
                         notice.contentLabel.Text = $"{Path.GetFileName(files.FilePath)} has been exported successfully!";

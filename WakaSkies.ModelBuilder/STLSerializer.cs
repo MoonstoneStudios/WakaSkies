@@ -92,10 +92,12 @@ namespace WakaSkies.WakaModelBuilder
 
             foreach (var face in model.Faces)
             {
+                // write normal
                 writer.Write(face.Normal.X);
                 writer.Write(face.Normal.Y);
                 writer.Write(face.Normal.Z);
 
+                // write points
                 foreach (var point in face.Points)
                 {
                     writer.Write(point.X);
@@ -140,6 +142,44 @@ namespace WakaSkies.WakaModelBuilder
 
             WakaModel model = new WakaModel(faces.Count);
             faces.ForEach(f => model.AddTriangle(f));
+            return model;
+        }
+
+        /// <summary>
+        /// Load a binary file.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public WakaModel DeserializeBinary(Stream stream)
+        {
+            //using var stream = new FileStream(filePath, FileMode.Open);
+            using var reader = new BinaryReader(stream, Encoding.UTF8, false);
+
+            // read and skip header
+            reader.ReadBytes(80);
+            uint triCount = reader.ReadUInt32();
+
+            WakaModel model = new WakaModel((int)triCount);
+            for (int i = 0; i < triCount; i++)
+            {
+                // read the normal
+                var normal = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+                // read the points.
+                Vector3[] points = new Vector3[3];
+                for (int j = 0; j < 3; j++)
+                {
+                    points[j] = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                }
+
+                // make the face
+                var face = new TriangleFace(normal, points);
+                model.AddTriangle(face);
+
+                // read and discard the required 0.
+                reader.ReadUInt16();
+            }
+
             return model;
         }
 
