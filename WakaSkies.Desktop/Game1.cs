@@ -79,7 +79,9 @@ namespace WakaSkies.Desktop
             // setup UI.
             SetupStartUI();
 
-            skybox = new Skybox("cubemap", Content);
+            // random skybox
+            var rand = new Random();
+            skybox = new Skybox($"Skyboxes/skybox{rand.Next(0, 7)}", Content);
             camera = new Camera();
             modelManager = new ModelManager();
 
