@@ -23,7 +23,7 @@ namespace WakaSkies.Desktop
         /// <summary>
         /// The actual skybox texture
         /// </summary>
-        private TextureCube skyBoxTexture;
+        public TextureCube skyBoxTexture;
 
         /// <summary>
         /// The effect file that the skybox will use to render

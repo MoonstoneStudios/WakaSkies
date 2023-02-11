@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Assets;
+using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.File;
 using Myra.Graphics2D.UI.Properties;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using WakaSkies.Desktop.UI;
@@ -32,6 +35,13 @@ namespace WakaSkies.Desktop
         private Camera camera;
         private Skybox skybox;
         private ModelManager modelManager;
+
+        private int selectedSkybox;
+        private bool backgroundSettingsOpen;
+        private Dictionary<string, TextureCube> skyboxTextures = new Dictionary<string, TextureCube>();
+
+        private BackgroundSelect backgroundSelect;
+        private BackgroundSelectClosed backgroundSelectClosed;
 
         private RasterizerState rasterizer = new RasterizerState()
         {
@@ -76,12 +86,16 @@ namespace WakaSkies.Desktop
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // random skybox
+            var rand = new Random();
+            selectedSkybox = rand.Next(0, 7);
+            string name = $"Skyboxes/skybox{selectedSkybox}";
+            skybox = new Skybox(name, Content);
+            skyboxTextures.Add(name, skybox.skyBoxTexture);
+
             // setup UI.
             SetupStartUI();
 
-            // random skybox
-            var rand = new Random();
-            skybox = new Skybox($"Skyboxes/skybox{rand.Next(0, 7)}", Content);
             camera = new Camera();
             modelManager = new ModelManager();
 
@@ -214,6 +228,7 @@ namespace WakaSkies.Desktop
         /// </summary>
         private async void SetupStartUI()
         {
+            // setup Myra
             MyraEnvironment.Game = this;
             MyraEnvironment.DefaultAssetManager.AssetResolver =
                 new FileAssetResolver(Path.Combine(Directory.GetCurrentDirectory(), Content.RootDirectory));
@@ -225,6 +240,7 @@ namespace WakaSkies.Desktop
                 ui.OnChar(a.Character);
             };
 
+            // add start menu
             var startMenu = new StartMenu();
             startMenu.generateButton.Click += async (s, e) =>
             {
@@ -241,6 +257,7 @@ namespace WakaSkies.Desktop
 
             ui.Root = startMenu;
 
+            // notice header
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) 
                 || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
@@ -255,8 +272,8 @@ namespace WakaSkies.Desktop
                 ui.Widgets.Add(header);
             }
 
+            // more settings
             moreSettings = new MoreSettings();
-
             startMenu.moreSettings.Click += (s, a) =>
             {
                 startMenu.moreSettings.Enabled = false;
@@ -269,6 +286,7 @@ namespace WakaSkies.Desktop
                 moreSettings.timeoutOptions.Visible = !moreSettings.useDefaultTimeout.IsChecked;
             };
 
+            // set data on close.
             moreSettings.Closed += (s, a) =>
             {
                 if (moreSettings.Result)
@@ -288,8 +306,64 @@ namespace WakaSkies.Desktop
                 startMenu.moreSettings.Enabled = true;
             };
 
-            
+            backgroundSelect = new BackgroundSelect();
+            backgroundSelectClosed = new BackgroundSelectClosed();
+            backgroundSelect.background0.Click += BackgroundButtonClick;
+            backgroundSelect.background1.Click += BackgroundButtonClick;
+            backgroundSelect.background2.Click += BackgroundButtonClick;
+            backgroundSelect.background3.Click += BackgroundButtonClick;
+            backgroundSelect.background4.Click += BackgroundButtonClick;
+            backgroundSelect.background5.Click += BackgroundButtonClick;
+            backgroundSelect.background6.Click += BackgroundButtonClick;
 
+            backgroundSelect.closeBackground.Click += (s, e) =>
+            {
+                ui.Widgets.Remove(backgroundSelect);
+                ui.Widgets.Add(backgroundSelectClosed);
+            };
+            backgroundSelectClosed.openBackground.Click += (s, e) =>
+            {
+                ui.Widgets.Remove(backgroundSelectClosed);
+                ui.Widgets.Add(backgroundSelect);
+            };
+
+            var stack = (HorizontalStackPanel)backgroundSelect.Widgets.Where(w => w.GetType() == typeof(HorizontalStackPanel)).First();
+
+            var newButton = (ImageButton)stack.Widgets.Where(w => w.Id == $"background{selectedSkybox}").First();
+            newButton.Background = new SolidBrush(Color.White);
+
+            // add closed BG
+            ui.Widgets.Add(backgroundSelectClosed);
+        }
+
+        private void BackgroundButtonClick(object sender, EventArgs e)
+        {
+            var prevSkybox = selectedSkybox;
+            var button = (ImageButton)sender;
+            var lastNum = int.Parse(button.Id[^1].ToString());
+            if (selectedSkybox == lastNum) return;
+            selectedSkybox = lastNum;
+
+            string sbName = $"Skyboxes/skybox{selectedSkybox}";
+            if (skyboxTextures.ContainsKey(sbName))
+            {
+                skybox.skyBoxTexture = skyboxTextures[sbName];
+            }
+            else
+            {
+                var cube = Content.Load<TextureCube>(sbName);
+                skybox.skyBoxTexture = cube;
+                skyboxTextures.Add(sbName, cube);
+            }
+
+
+            var stack = (HorizontalStackPanel)backgroundSelect.Widgets.Where(w => w.GetType() == typeof(HorizontalStackPanel)).First();
+            var newButton = (ImageButton)stack.Widgets.Where(w => w.Id == $"background{selectedSkybox}").First();
+            var oldButton = (ImageButton)stack.Widgets.Where(w => w.Id == $"background{prevSkybox}").First();
+            oldButton.Background = new SolidBrush("#333333");
+            newButton.Background = new SolidBrush(Color.White);
+            oldButton.OverBackground = new SolidBrush("#3e3e42");
+            newButton.OverBackground = new SolidBrush("#cccccc");
         }
 
         // credit: https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
