@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -8,7 +9,7 @@ using WakaSkies.WakaAPI;
 
 namespace WakaSkies.WakaModelBuilder
 {
-    internal class StaticticModelBuilder
+    internal class StatisticModelBuilder
     {
 
         /// <summary>
@@ -20,6 +21,7 @@ namespace WakaSkies.WakaModelBuilder
         /// <returns>A model with the stats attached.</returns>
         public WakaModel AddStats(WakaModel model, WakaResponse response, string year)
         {
+            Log.Information($"StatisticModelBuilder - Adding stats to model!");
             string yearFile = $"{year} text";
             string hoursFile = "hours text";
             // get the total hours.
@@ -46,6 +48,7 @@ namespace WakaSkies.WakaModelBuilder
                 yearModel
             };
 
+            Log.Information($"StatisticModelBuilder - Loading each year digit.");
             // get each digit.
             char[] digits = totalHours.ToString().ToCharArray();
             foreach (var digit in digits)
@@ -69,6 +72,7 @@ namespace WakaSkies.WakaModelBuilder
             hoursModel.ShiftModel(new Vector3(x, 0, 0));
             generatedModels.Add(hoursModel);
 
+            Log.Information($"StatisticModelBuilder - Combining all models.");
             // combine the models.
             WakaModel final = model;
             foreach (var m in generatedModels)
@@ -76,6 +80,7 @@ namespace WakaSkies.WakaModelBuilder
                 final = WakaModel.CombineModels(final, m);
             }
 
+            Log.Information($"StatisticModelBuilder - Done adding statistics to model!");
             return final;
         }
 

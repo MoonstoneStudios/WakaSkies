@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -31,6 +32,7 @@ namespace WakaSkies.WakaModelBuilder
         /// <returns>A brand new triangulated <see cref="WakaModel"/>.</returns>
         public WakaModel BuildModel(ModelBuildSettings settings)
         {
+            Log.Information("ModelBuilder - Starting to build model!");
             var response = settings.Response;
             var addText = settings.AddStatistics;
 
@@ -48,6 +50,7 @@ namespace WakaSkies.WakaModelBuilder
             var yearData = response.Data.Days[0].Date;
             firstDay = (int)yearData.DayOfWeek;
             currentDay = firstDay;
+            Log.Information("ModelBuilder - Creating each rectangular prism.");
             for (int i = 0; i < response.Data.Days.Length; i++)
             {
                 var day = response.Data.Days[i];
@@ -83,23 +86,28 @@ namespace WakaSkies.WakaModelBuilder
                     currentWeek++;
                 }
             }
-
+            Log.Information("ModelBuilder - Starting triangulation of prisms.");
             var model = Triangulate(prisms);
+
+            Log.Information("ModelBuilder - Appending base.");
             var modelWithBase = AppendBase(model);
 
             if (settings.AddBorder)
             {
+                Log.Information("ModelBuilder - Adding border.");
                 var border = WakaModel.LoadFromFile("modelborder");
                 modelWithBase = WakaModel.CombineModels(modelWithBase, border);
             }
 
             if (addText)
             {
-                var numberBuilder = new StaticticModelBuilder();
+                Log.Information("ModelBuilder - Adding text.");
+                var numberBuilder = new StatisticModelBuilder();
                 return numberBuilder.AddStats(modelWithBase, response, settings.Year.ToString());
             }
             else
             {
+                Log.Information("ModelBuilder - Finished building the model!");
                 return modelWithBase;
             }
         }
