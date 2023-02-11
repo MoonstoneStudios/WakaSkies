@@ -17,7 +17,7 @@ namespace WakaSkies.Desktop
     /// <summary>
     /// The logic for the model and rendering.
     /// </summary>
-    internal class ModelManager
+    public class ModelManager
     {
         private ModelBuilder modelBuilder;
         public WakaModel model;
