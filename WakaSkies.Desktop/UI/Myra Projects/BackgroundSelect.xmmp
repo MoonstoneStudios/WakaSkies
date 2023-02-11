@@ -1,0 +1,24 @@
+<Project>
+  <Project.ExportOptions />
+  <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" Height="100" Padding="5" Background="#252526FF" Id="backgroundSelectGrid">
+    <Grid.ColumnsProportions>
+      <Proportion Type="Auto" />
+      <Proportion Type="Fill" />
+    </Grid.ColumnsProportions>
+    <Grid.RowsProportions>
+      <Proportion Type="Auto" />
+      <Proportion Type="Fill" />
+    </Grid.RowsProportions>
+    <Label Text="Background" VerticalAlignment="Center" />
+    <TextButton Text="Close" Padding="3" HorizontalAlignment="Right" VerticalAlignment="Center" GridColumn="1" Id="closeBackground" />
+    <HorizontalStackPanel Spacing="5" Margin="0, 10, 0, 0" GridRow="1" GridColumnSpan="2">
+      <ImageButton Image="../../Content/Skyboxes/thumbnail0.png" ImageWidth="45" ImageHeight="45" Padding="3" Id="background0" />
+      <ImageButton Image="../../Content/Skyboxes/thumbnail1.png" ImageWidth="45" ImageHeight="45" Padding="3" Id="background1" />
+      <ImageButton Image="../../Content/Skyboxes/thumbnail2.png" ImageWidth="45" ImageHeight="45" Padding="3" Id="background2" />
+      <ImageButton Image="../../Content/Skyboxes/thumbnail3.png" ImageWidth="45" ImageHeight="45" Padding="3" Id="background3" />
+      <ImageButton Image="../../Content/Skyboxes/thumbnail4.png" ImageWidth="45" ImageHeight="45" Padding="3" Id="background4" />
+      <ImageButton Image="../../Content/Skyboxes/thumbnail5.png" ImageWidth="45" ImageHeight="45" Padding="3" Id="background5" />
+      <ImageButton Image="../../Content/Skyboxes/thumbnail6.png" ImageWidth="45" ImageHeight="45" Padding="3" Id="background6" />
+    </HorizontalStackPanel>
+  </Grid>
+</Project>
