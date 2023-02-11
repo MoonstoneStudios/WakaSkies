@@ -12,7 +12,7 @@ namespace WakaSkies.Desktop
     /// <summary>
     /// The camera logic for the app.
     /// </summary>
-    internal class Camera
+    public class Camera
     {
 
         // http://rbwhitaker.wikidot.com/monogame-using-3d-models
