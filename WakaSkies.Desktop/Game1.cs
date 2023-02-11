@@ -8,6 +8,7 @@ using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.File;
 using Myra.Graphics2D.UI.Properties;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,6 +44,8 @@ namespace WakaSkies.Desktop
 
         public Game1()
         {
+            Log.Information("Game1 - Logger created");
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -59,10 +62,17 @@ namespace WakaSkies.Desktop
             base.Initialize();
         }
 
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            Log.CloseAndFlush();
+            base.OnExiting(sender, args);
+        }
+
         protected override async void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Log.Information("Game1 - Creating skybox.");
             // random skybox
             var rand = new Random();
             selectedSkybox = rand.Next(0, 7);
@@ -70,10 +80,13 @@ namespace WakaSkies.Desktop
             skybox = new Skybox(name, Content);
             skyboxTextures.Add(name, skybox.skyBoxTexture);
 
+            Log.Information("Game1 - Setting up start ui.");
             // setup UI.
             uiManager.SetupStartUI(this, Content);
 
+            Log.Information("Game1 - Creating camera");
             camera = new Camera();
+            Log.Information("Game1 - Creating model manager.");
             modelManager = new ModelManager();
 
             modelManager.LoadContent(GraphicsDevice);

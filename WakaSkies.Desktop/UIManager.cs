@@ -18,6 +18,7 @@ using Myra.Graphics2D.Brushes;
 using WakaSkies.WakaModelBuilder;
 
 using MDesktop = Myra.Graphics2D.UI.Desktop;
+using Serilog;
 
 namespace WakaSkies.Desktop
 {
@@ -61,6 +62,7 @@ namespace WakaSkies.Desktop
         /// </summary>
         private void SetupStartMenu()
         {
+            Log.Information("UIManager - Creating startup menu.");
             // add start menu
             startMenu = new StartMenu();
             startMenu.generateButton.Click += async (s, e) =>
@@ -94,6 +96,7 @@ namespace WakaSkies.Desktop
                 };
 
                 ui.Widgets.Add(header);
+                Log.Information("UIManager - Added untested OS header.");
             }
         }
 
@@ -102,6 +105,7 @@ namespace WakaSkies.Desktop
         /// </summary>
         private void SetupMoreSettings()
         {
+            Log.Information("UIManager - Settung up more settings menu.");
             // more settings
             moreSettings = new MoreSettings();
             startMenu.moreSettings.Click += (s, a) =>
@@ -122,6 +126,7 @@ namespace WakaSkies.Desktop
             {
                 if (moreSettings.Result)
                 {
+                    Log.Information("UIManager - Change in generation settings.");
                     // set the settings.
                     game.modelManager.buildSettings = new ModelBuildSettings()
                     {
@@ -144,6 +149,7 @@ namespace WakaSkies.Desktop
         /// </summary>
         private void SetupBackgroundSelector()
         {
+            Log.Information("UIManager - Setting up background selector.");
             backgroundSelect = new BackgroundSelect();
             backgroundSelectClosed = new BackgroundSelectClosed();
             backgroundSelect.background0.Click += BackgroundButtonClick;
@@ -182,12 +188,14 @@ namespace WakaSkies.Desktop
         /// <param name="e"></param>
         private void BackgroundButtonClick(object sender, EventArgs e)
         {
+            Log.Information("UIManager - Background button clicked.");
             var prevSkybox = game.selectedSkybox;
             var button = (ImageButton)sender;
             var lastNum = int.Parse(button.Id[^1].ToString());
             if (game.selectedSkybox == lastNum) return;
             game.selectedSkybox = lastNum;
 
+            Log.Information("UIManager - Looking to see if texture has already been loaded.");
             string sbName = $"Skyboxes/skybox{game.selectedSkybox}";
             if (game.skyboxTextures.ContainsKey(sbName))
             {
@@ -200,7 +208,7 @@ namespace WakaSkies.Desktop
                 game.skyboxTextures.Add(sbName, cube);
             }
 
-
+            Log.Information("UIManager - Skybox texture updated.");
             var stack = (HorizontalStackPanel)backgroundSelect.Widgets.Where(w => w.GetType() == typeof(HorizontalStackPanel)).First();
             var newButton = (ImageButton)stack.Widgets.Where(w => w.Id == $"background{game.selectedSkybox}").First();
             var oldButton = (ImageButton)stack.Widgets.Where(w => w.Id == $"background{prevSkybox}").First();
@@ -215,6 +223,7 @@ namespace WakaSkies.Desktop
         /// </summary>
         private void AddIconsUI()
         {
+            Log.Information("UIManager - Adding icons UI.");
             var start = (StartMenu)ui.Root;
             var icons = new Icons();
             ui.Widgets.Add(icons);
@@ -231,6 +240,7 @@ namespace WakaSkies.Desktop
             // setup buttons
             icons.downloadButton.Click += (s, e) =>
             {
+                Log.Information("UIManager - Download button clicked.");
                 var files = new FileDialog(FileDialogMode.SaveFile)
                 {
                     Filter = "*.stl"
@@ -250,6 +260,7 @@ namespace WakaSkies.Desktop
                 // when the file dialog is done.
                 files.Closed += (s, a) =>
                 {
+                    Log.Information("UIManager - File dialog closed, saving model.");
                     SaveModel(files, exportAsASCII);
                 };
 
@@ -268,7 +279,11 @@ namespace WakaSkies.Desktop
         private void SaveModel(FileDialog files, CheckBox exportAsASCII)
         {
             // canceled
-            if (!files.Result) return;
+            if (!files.Result)
+            {
+                Log.Information("UIManager - No file selected to be created. File save canceled.");
+                return;
+            }
 
             try
             {
@@ -277,14 +292,17 @@ namespace WakaSkies.Desktop
 
                 if (exportAsASCII.IsChecked)
                 {
+                    Log.Information("UIManager - Serializing to ascii STL.");
                     // serialize as text.
                     var stl = serializer.Serialize(game.modelManager.model);
 
                     // write
-                    System.IO.File.WriteAllText(files.FilePath, stl);
+                    File.WriteAllText(files.FilePath, stl);
+                    Log.Information("UIManager - Done saving ascii STL!");
                 }
                 else
                 {
+                    Log.Information("UIManager - Saving as binary STL.");
                     // serialize as binary.
                     serializer.SerializeBinary(files.FilePath, game.modelManager.model);
                 }
@@ -302,6 +320,10 @@ namespace WakaSkies.Desktop
             }
             catch (Exception ex)
             {
+                var type = exportAsASCII.IsChecked ? "an ascii" : "a binary";
+                Log.Error($"UIManager - Error while saving {type} STL");
+                Log.Error($"UIManager - Error info: {ex.GetType().Name} {ex.Message}");
+                Log.Error($"UIManager - Stack trace: {ex.StackTrace}");
                 // show a notice window.
                 var notice = new NoticeWindow();
                 notice.contentLabel.Text = $"An error occurred while trying to save the file. Error: {ex.Message}";
@@ -337,6 +359,7 @@ namespace WakaSkies.Desktop
                     // center the center of the window.
                     moreSettings.Left = (game.Window.ClientBounds.Width / 2) - (moreSettings.Bounds.Width / 2);
                     moreSettings.Top = (game.Window.ClientBounds.Height / 2) - (moreSettings.Bounds.Height / 2);
+                    Log.Information("UIManager - Moved more settings menu to center of screen.");
                 }
             };
         }
@@ -346,26 +369,32 @@ namespace WakaSkies.Desktop
         {
             try
             {
+                Log.Information($"UIManager - Opening {url}.");
                 Process.Start(url);
             }
             catch
             {
+                Log.Error($"UIManager - Opening the url {url} failed. Attempting different OS approch.");
                 // hack because of this: https://github.com/dotnet/corefx/issues/10361
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     url = url.Replace("&", "^&");
                     Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                    Log.Information($"UIManager - {url} opened using ProcessStartInfo on Windows.");
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     Process.Start("xdg-open", url);
+                    Log.Information($"UIManager - {url} opened on Linux.");
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
                     Process.Start("open", url);
+                    Log.Information($"UIManager - {url} opened on MacOS.");
                 }
                 else
                 {
+                    Log.Error($"UIManager - {url} could not be opened.");
                     throw;
                 }
             }

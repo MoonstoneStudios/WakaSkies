@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,6 +125,7 @@ namespace WakaSkies.Desktop
         /// <param name="height">The new height of the window.</param>
         public void ChangeSize(float width, float height)
         {
+            Log.Information("Camera - Window changed size, changing FOV.");
             // change the aspect ratio.
             projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), width / height, 0.1f, 1000f);
         }
