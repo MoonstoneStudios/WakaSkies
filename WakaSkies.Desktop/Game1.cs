@@ -44,24 +44,6 @@ namespace WakaSkies.Desktop
 
         public Game1()
         {
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "WakaSkies");
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            var filePath = path + "\\log.txt";
-            if (File.Exists(filePath))
-            {
-                File.WriteAllText(filePath, "");
-            }
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.File(filePath, rollingInterval: RollingInterval.Infinite, 
-                    rollOnFileSizeLimit: true, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] - {Message}\n",
-                    shared: true)
-                .CreateLogger();
             Log.Information("Game1 - Logger created");
 
             graphics = new GraphicsDeviceManager(this);

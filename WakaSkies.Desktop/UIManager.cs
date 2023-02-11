@@ -359,7 +359,7 @@ namespace WakaSkies.Desktop
                     // center the center of the window.
                     moreSettings.Left = (game.Window.ClientBounds.Width / 2) - (moreSettings.Bounds.Width / 2);
                     moreSettings.Top = (game.Window.ClientBounds.Height / 2) - (moreSettings.Bounds.Height / 2);
-                    Log.Information("UIManager - Moded more settings menu to center of screen.");
+                    Log.Information("UIManager - Moved more settings menu to center of screen.");
                 }
             };
         }
