@@ -15,7 +15,7 @@ Please make an Issue and provide as much information as you can.
 
 ## Making the PR
 Once you have gotten approval for a request, or decided to patch a bug, follow these steps:
-- Clone the repository.
+- Clone the `develop` branch. **Do not clone `main`!!!**
 - Create a new branch and title it with the feature/fix.
 - Once the code is ready, make a PR on the main GitHub page.
 
