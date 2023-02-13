@@ -1,6 +1,7 @@
 # WakaSkies
 
 <img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/wakaskies%20logo.png?raw=true)" width="150px" height="150px" />
+
 Generate a 3D model of your time spent programming! You can export it as an STL for 3D printing! WakaSkies is like GitHub Skylines but for time spent programming! This project was written in C# and uses [MonoGame](https://www.monogame.net/) for the desktop client. 
 You need to have a WakaTime account to use. [Take me to the downloads!](https://github.com/MoonstoneStudios/WakaSkies/releases)
 
