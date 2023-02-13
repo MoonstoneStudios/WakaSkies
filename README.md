@@ -1,8 +1,8 @@
 # WakaSkies
 
 <img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/wakaskies%20logo.png?raw=true)" width="150px" height="150px" />
-
-GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoGame](https://www.monogame.net/) for the desktop client. [Take me to the downloads!](https://github.com/MoonstoneStudios/WakaSkies/releases)
+Generate a 3D model of your time spent programming! You can export it as an STL for 3D printing! WakaSkies is like GitHub Skylines but for time spent programming! This project was written in C# and uses [MonoGame](https://www.monogame.net/) for the desktop client. 
+You need to have a WakaTime account to use. [Take me to the downloads!](https://github.com/MoonstoneStudios/WakaSkies/releases)
 
 ## Project Breakdown
 - `WakaSkies.WakaAPI` - This project houses the code related to making a request to WakaTime and loading it.
@@ -13,6 +13,11 @@ GitHub Skylines but for WakaTime! This project was written in C# and uses [MonoG
 # Important
 This app has only been tested on a Windows computer. I am not a verified Apple developer either so it may not work at all on MacOS. 
 But, a website release is planned so stay tuned!
+
+# Why Does WakaSkies Need My WakaTime API Key?
+In order to retreive data from WakaTime, WakaSkies needs your API key.
+WakaSkies uses WakaTime's [Insights API Enpoint](https://wakatime.com/developers#insights). This requires a user's API key to access.
+**WakaSkies does not use your API key for anything other than getting your programming statistics.**
 
 # Screenshots
 <img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/Images/screenshot1.png?raw=true)" width="600px" />
