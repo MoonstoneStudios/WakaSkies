@@ -36,4 +36,6 @@ void CreateLogger()
             rollOnFileSizeLimit: true, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] - {Message}\n",
             shared: true)
         .CreateLogger();
+
+    Log.Information("--WakaSkies 1.1.0--");
 }
