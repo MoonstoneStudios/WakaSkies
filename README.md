@@ -53,7 +53,7 @@ WakaSkies uses WakaTime's [Insights API Enpoint](https://wakatime.com/developers
 
 ---
 
-[Stackoverflow answer on how to read file from embdedded resouces](https://stackoverflow.com/a/3314213)
+[Stackoverflow answer on how to read file from embedded resouces](https://stackoverflow.com/a/3314213)
 <details>
     <summary>License:</summary>
 
