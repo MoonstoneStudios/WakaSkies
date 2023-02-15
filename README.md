@@ -23,6 +23,7 @@ WakaSkies uses WakaTime's [Insights API Enpoint](https://wakatime.com/developers
 # Screenshots
 <img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/Images/screenshot1.png?raw=true)" width="600px" />
 <img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/Images/screenshot2.png?raw=true)" width="600px" />
+<img src="https://github.com/MoonstoneStudios/WakaSkies/blob/main/Images/screenshot3.png?raw=true)" width="600px" />
 
 # Roadmap/Ideas for future releases
 - Website release is planned.
