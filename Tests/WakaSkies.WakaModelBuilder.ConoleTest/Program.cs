@@ -27,7 +27,11 @@ namespace WakaSkies.WakaModelBuilder.ConoleTest
                 ModelBuilder builder = new ModelBuilder();
                 if (Directory.Exists(directory))
                 {
-                    WakaModel model = builder.BuildModel(response);
+                    WakaModel model = builder.BuildModel(new ModelBuildSettings() 
+                    { 
+                        Response = response, 
+                        Year = year
+                    });
                     STLSerializer serializer = new STLSerializer();
 
                     File.WriteAllText(directory + "/file.stl", serializer.Serialize(model));
