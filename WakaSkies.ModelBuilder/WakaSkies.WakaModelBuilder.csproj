@@ -30,6 +30,7 @@
     <None Remove="Resources\9 text.stl" />
     <None Remove="Resources\base.stl" />
     <None Remove="Resources\hours text.stl" />
+    <None Remove="Resources\modelborder.stl" />
     <None Remove="Resources\wakalogo.stl" />
   </ItemGroup>
 
@@ -61,6 +62,7 @@
     <EmbeddedResource Include="Resources\9 text.stl" />
     <EmbeddedResource Include="Resources\base.stl" />
     <EmbeddedResource Include="Resources\hours text.stl" />
+    <EmbeddedResource Include="Resources\modelborder.stl" />
     <EmbeddedResource Include="Resources\wakalogo.stl" />
   </ItemGroup>
 

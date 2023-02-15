@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Serilog;
 using System.Net;
 
 namespace WakaSkies.WakaAPI
@@ -33,6 +34,7 @@ namespace WakaSkies.WakaAPI
         /// <param name="apiKey">The user's API key. This should be in plain text.</param>
         public WakaClient(string apiKey)
         {
+            Log.Information("WakaClient - Encrypting API key.");
             // https://stackoverflow.com/a/11743162
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(apiKey);
             var key = Convert.ToBase64String(plainTextBytes);
@@ -46,6 +48,7 @@ namespace WakaSkies.WakaAPI
             }
             // add the authorization header
             client.DefaultRequestHeaders.Add("Authorization", $"Basic {key}");
+            Log.Information("WakaClient - Key added to request header.");
         }
 
         /// <summary>
@@ -55,11 +58,13 @@ namespace WakaSkies.WakaAPI
         /// <param name="year">The year to grab in YYYY format.</param>
         /// <param name="timeout">The optional keystroke timeout to get.</param>
         /// <returns>A new <see cref="WakaResponse"/>.</returns>
-        public async Task<WakaResponse> GetUserInsights(string userName, string year, string? timeout = null)
+        public async Task<WakaResponse> GetUserInsights(string userName, string year, int? timeout = null)
         {
+            Log.Information("WakaClient - Getting user insights...");
             // check year.
             if (year.Length != 4 || !int.TryParse(year, out int _))
             {
+                Log.Error($"WakaClient - {year} is not in YYYY format.");
                 // year not valid.
                 return new WakaResponse()
                 {
@@ -78,6 +83,7 @@ namespace WakaSkies.WakaAPI
             // check if failed.
             if (!response.IsSuccessStatusCode)
             {
+                Log.Error("WakaClient - There was not a successful API call.");
                 var tip = "";
                 
                 // add a little tip for the user if they get these errors.
@@ -99,6 +105,7 @@ namespace WakaSkies.WakaAPI
                         break;
                 }
 
+                Log.Error($"WakaClient - {response.StatusCode:D} {response.ReasonPhrase}." + tip);
                 // return an unsuccessful object.
                 return new WakaResponse()
                 {
@@ -107,6 +114,7 @@ namespace WakaSkies.WakaAPI
                 };
             }
 
+            Log.Information("WakaClient - Successful API request!");
             // successful response, decode data and return
             var content = await response.Content.ReadAsStringAsync();
             WakaResponse wakaResponse = null;
@@ -114,9 +122,13 @@ namespace WakaSkies.WakaAPI
             try
             {
                 wakaResponse = JsonConvert.DeserializeObject<WakaResponse>(content);
+                Log.Information("WakaClient - API response converted into WakaResponse.");
             }
-            catch
+            catch(Exception e)
             {
+                Log.Error("WakaClient - There was an error trying to read the response from WakaTime.");
+                Log.Error($"WakaClient - Error info: {e.GetType().Name} {e.Message}");
+                Log.Error($"WakaClient - Stack trace: {e.StackTrace}");
                 // return an unsuccessful object.
                 return new WakaResponse()
                 {
@@ -129,6 +141,7 @@ namespace WakaSkies.WakaAPI
             {
                 if (wakaResponse.Data.Days.Length == 0)
                 {
+                    Log.Warning($"WakaClient - No programming data for year {year}");
                     // return an unsuccessful object.
                     return new WakaResponse()
                     {
@@ -138,6 +151,7 @@ namespace WakaSkies.WakaAPI
                 }
             }
 
+            Log.Information("WakaClient - Insights have been retrieved!");
             wakaResponse.Content = content;
             return wakaResponse;
         }

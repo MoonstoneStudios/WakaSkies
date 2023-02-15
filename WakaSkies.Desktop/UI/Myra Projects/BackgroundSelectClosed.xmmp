@@ -1,0 +1,15 @@
+<Project>
+  <Project.ExportOptions />
+  <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" Height="40" Padding="5" Opacity="0.5" Background="#252526FF" Id="backgroundSelectGridClosed" >
+    <Grid.ColumnsProportions>
+      <Proportion Type="Auto" />
+      <Proportion Type="Fill" />
+    </Grid.ColumnsProportions>
+    <Grid.RowsProportions>
+      <Proportion Type="Auto" />
+      <Proportion Type="Fill" />
+    </Grid.RowsProportions>
+    <Label Text="Background" VerticalAlignment="Center" />
+    <TextButton Text="Open" Padding="3" HorizontalAlignment="Right" VerticalAlignment="Center" GridColumn="1" Id="openBackground" />
+  </Grid>
+</Project>

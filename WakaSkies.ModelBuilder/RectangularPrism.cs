@@ -57,7 +57,7 @@ namespace WakaSkies.WakaModelBuilder
         /// <param name="position">The position of the A point on the rectangle. 
         /// See <see cref="points"/> for info on what Point is the A point.
         /// </param>
-        public RectangularPrism(int height, Vector3 position)
+        public RectangularPrism(float height, Vector3 position)
         {
             Generate3DShape(height, position);
         }
@@ -69,7 +69,7 @@ namespace WakaSkies.WakaModelBuilder
         /// <param name="position">The position of the A point on the rectangle. 
         /// See <see cref="points"/> for info on what Point is the A point.
         /// </param>
-        private void Generate3DShape(int height, Vector3 position)
+        private void Generate3DShape(float height, Vector3 position)
         {
             // 3D printers use Z as up and +Y as forward.
             // Set the A vertex.

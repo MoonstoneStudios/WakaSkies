@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -103,18 +104,18 @@ namespace WakaSkies.WakaModelBuilder
         /// <returns></returns>
         public static WakaModel LoadFromFile(string fileName)
         {
+            Log.Information($"WakaModel - Loading model {fileName} from a file.");
             // https://stackoverflow.com/a/3314213
             var assem = Assembly.GetExecutingAssembly();
-            string file = "";
+            WakaModel file;
 
             using (var stream = assem.GetManifestResourceStream($"WakaSkies.WakaModelBuilder.Resources.{fileName}.stl"))
-            using (StreamReader reader = new StreamReader(stream))
             {
-                file = reader.ReadToEnd();
+                var serializer = new STLSerializer();
+                Log.Information($"WakaModel - Deserializing {fileName}...");
+                return serializer.DeserializeBinary(stream);
             }
 
-            var serializer = new STLSerializer();
-            return serializer.Deserialize(file);
         }
 
     }

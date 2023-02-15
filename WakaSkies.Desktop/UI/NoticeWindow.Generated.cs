@@ -36,8 +36,8 @@ namespace WakaSkies.Desktop.UI
 			Title = "";
 			Left = 568;
 			Top = 237;
-			Width = 300;
-			Height = 150;
+			Width = 400;
+			Height = 200;
 			Content = panel1;
 		}
 

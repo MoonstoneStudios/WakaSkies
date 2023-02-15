@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace WakaSkies.Desktop
     /// <summary>
     /// The logic for the model and rendering.
     /// </summary>
-    internal class ModelManager
+    public class ModelManager
     {
         private ModelBuilder modelBuilder;
         public WakaModel model;
@@ -35,6 +36,9 @@ namespace WakaSkies.Desktop
         private string prevYear;
         private bool prevStats;
 
+        public ModelBuildSettings buildSettings;
+        private ModelBuildSettings lastSettings;
+
         public void LoadContent(GraphicsDevice device)
         {
             // setup the effect.
@@ -46,6 +50,7 @@ namespace WakaSkies.Desktop
             device.RasterizerState = rasterizer;
 
             modelBuilder = new ModelBuilder();
+            buildSettings = new ModelBuildSettings();
         }
 
         public void Draw(GraphicsDevice graphicsDevice, Camera camera)
@@ -66,21 +71,24 @@ namespace WakaSkies.Desktop
 
         public async Task<bool> GenerateModel(MDesktop ui, Camera camera)
         {
+            Log.Information("ModelManager - Generating model.");
             // get the start UI.
             var start = (StartMenu)ui.Root;
             if (string.IsNullOrWhiteSpace(start.wakaKeyInput.Text)
                 || string.IsNullOrWhiteSpace(start.wakaUserInput.Text))
             {
+                Log.Information("ModelManager - Model generation canceled, missing info.");
                 start.errorText.Text = "Error: some required information is missing.";
                 start.errorText.Visible = true;
                 return false;
             }
 
+            buildSettings.Year = start.wakaYearCombo.SelectedItem.Text;
+
             // dont regenerate if same info is entered.
-            if (prevUserName == start.wakaUserInput.Text
-                && prevYear == start.wakaYearCombo.SelectedItem.Text
-                && prevStats == start.generateStats.IsChecked)
+            if (buildSettings == lastSettings)
             {
+                Log.Information("ModelManager - Model generation canceled, same info as last time.");
                 start.Visible = false;
                 camera.StartRotation();
                 return true;
@@ -88,13 +96,17 @@ namespace WakaSkies.Desktop
 
             start.generateButton.Text = "Generating...";
 
+            Log.Information("ModelManager - Creating WakaClient.");
             // get the data.
             var wakaClient = new WakaClient(start.wakaKeyInput.Text);
-            var insights = await wakaClient.GetUserInsights(start.wakaUserInput.Text, start.wakaYearCombo.SelectedItem.Text);
+            var insights = await wakaClient.GetUserInsights(start.wakaUserInput.Text, 
+                start.wakaYearCombo.SelectedItem.Text, buildSettings.Timeout);
+
 
             // check for success.
             if (!insights.Successful)
             {
+                Log.Information("ModelManager - Model generation canceled, the request was not successful.");
                 start.errorText.Text = $"Error: {insights.ErrorData.Reason}";
                 start.errorText.Visible = true;
                 start.generateButton.Text = "Generate Model!";
@@ -103,17 +115,25 @@ namespace WakaSkies.Desktop
 
             try
             {
+                Log.Information("ModelManager - Building model.");
                 // build the model.
-                model = modelBuilder.BuildModel(insights, start.generateStats.IsChecked);
+                buildSettings.Response = insights;
+                //buildSettings.AddStatistics = start.generateStats.IsChecked;
+
+                model = modelBuilder.BuildModel(buildSettings);
             }
             catch (Exception ex)
             {
+                Log.Error("ModelManager - Error while generating model.");
+                Log.Error($"ModelManager - Error info: {ex.GetType().Name} {ex.Message}.");
+                Log.Error($"ModelManager - Stack Trace: {ex.StackTrace}.");
                 start.errorText.Text = $"Error: {ex.Message}";
                 start.generateButton.Text = "Generate Model!";
                 start.errorText.Visible = true;
                 return false;
             }
 
+            Log.Information("ModelManager - Converting System Vector2s to something MonoGame can understand.");
             // turn model into something MonoGame can understand.
             verts = new VertexPositionColorNormal[model.Vertices.Length];
             var faceCount = 0;
@@ -135,15 +155,16 @@ namespace WakaSkies.Desktop
                 }
             }
 
-            prevUserName = start.wakaUserInput.Text;
-            prevYear = start.wakaYearCombo.SelectedItem.Text;
-            prevStats = start.generateStats.IsChecked;
+            lastSettings = buildSettings;
 
             start.generateButton.Text = "Generate Model!";
+            start.errorText.Text = "";
+            start.errorText.Visible = false;
+
+            Log.Information("ModelManager - Model generation complete!");
             camera.StartRotation();
             camera.UpdateWorld(model.Width);
             return true;
         }
-
     }
 }

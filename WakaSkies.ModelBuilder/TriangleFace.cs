@@ -16,7 +16,7 @@ namespace WakaSkies.WakaModelBuilder
         /// <summary>
         /// The points of the face.
         /// </summary>
-        public Vector3[] Points { get; } = new Vector3[0];
+        public Vector3[] Points { get; } = new Vector3[3];
 
         /// <summary>
         /// The normal of the face.
