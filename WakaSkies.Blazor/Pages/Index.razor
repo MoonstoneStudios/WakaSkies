@@ -3,9 +3,10 @@
 @using WakaSkies.WakaModelBuilder;
 @inject IJSRuntime JSRuntime;
 
-<textarea @bind=data></textarea>
-<button @onclick=Create>Go</button>
+@*https://threejs.org/manual/#en/tips#html-background*@
 <canvas id="threeCanvas"></canvas>
+<textarea @bind=data style="position: relative"></textarea>
+<button @onclick=Create style="position: relative">Go</button>
 
 
 @code{

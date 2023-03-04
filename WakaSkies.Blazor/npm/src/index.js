@@ -27,14 +27,15 @@ window.createScene = function() {
     scene = new THREE.Scene();
 
     // create the lights
-    const amb = new THREE.AmbientLight(0xa6a6a6);
-    const point = new THREE.PointLight();
-    point.position.z = 10;
+    const amb = new THREE.AmbientLight(0xf2f2f2);
+    const point = new THREE.DirectionalLight();
+    //point.position.z = 10;
+    point.position.set(5,-11,7);
     point.castShadow = true;
     scene.add(amb);
     scene.add(point);
 
-    const helper = new THREE.PointLightHelper(point);
+    const helper = new THREE.DirectionalLightHelper(point);
     scene.add(helper);
 
     // setup the renderer
@@ -48,8 +49,41 @@ window.createScene = function() {
     const axesHelper = new THREE.AxesHelper( 5 );
     scene.add( axesHelper );
 
+    createSkybox();
+
     controls.update();
     animate();
+}
+
+/**
+ * Generate the skybox.
+ */
+// https://threejs.org/docs/index.html?q=cube#api/en/loaders/CubeTextureLoader
+function createSkybox(){
+
+    const randNum = getRandomInt(7);
+
+    scene.background = new THREE.CubeTextureLoader()
+	.setPath( `img/Skyboxes/${randNum}/` )
+	.load( [
+		'right.png',
+		'left.png',
+		'top.png',
+		'bottom.png',
+		'front.png',
+		'back.png'
+	] );
+}
+
+
+/**
+ * Get random int.
+ * @param {*} max The exclusive max.
+ * @returns {number} A random int.
+ * @copyright https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+ */
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
 
 /**
@@ -78,10 +112,12 @@ window.createModel = function (verts, normals, unmarshalled) {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(vertsArray, 3));
     geometry.setAttribute('normal', new THREE.BufferAttribute(normalsArray, 3));
+    geometry.computeVertexNormals();
 
     // https://stackoverflow.com/a/26471195
-    const material = new THREE.MeshPhongMaterial({ side: THREE.DoubleSide });
+    const material = new THREE.MeshPhongMaterial({ side: THREE.DoubleSide, color: 0xa3a3a3, specular: 0xfefefe, shininess: 0, reflectivity: 0, vertexColors: true});
     modelMesh = new THREE.Mesh(geometry, material);
+    modelMesh.castShadow = true;
     modelMesh.receiveShadow = true;
     modelMesh.position.x = -30;
     scene.add(modelMesh);
@@ -92,8 +128,29 @@ window.createModel = function (verts, normals, unmarshalled) {
  */
 function animate() {
     requestAnimationFrame(animate);
+
+    //https://threejs.org/manual/#en/responsive
+    if (resizeRendererToDisplaySize(renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+    }
+
     renderer.render(scene, camera);
 }
+
+// https://threejs.org/manual/#en/responsive
+function resizeRendererToDisplaySize(renderer) {
+    const canvas = renderer.domElement;
+    const pixelRatio = window.devicePixelRatio;
+    const width  = canvas.clientWidth  * pixelRatio | 0;
+    const height = canvas.clientHeight * pixelRatio | 0;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+      renderer.setSize(width, height, false);
+    }
+    return needResize;
+  }
 
 /**
  * Print to the console.
