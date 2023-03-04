@@ -1890,6 +1890,8 @@ WakaSkies uses WakaTime's [Insights API Enpoint](https://wakatime.com/developers
 
 </details>
 
+---
+
 [Stackoverflow answer for double sided THREE.js rendering.](https://stackoverflow.com/a/26471195)
 <details>
     <summary>License:</summary>
@@ -2255,6 +2257,8 @@ WakaSkies uses WakaTime's [Insights API Enpoint](https://wakatime.com/developers
         Creative Commons may be contacted at https://creativecommons.org/.
 
 </details>
+
+---
 
 [THREE.js](https://github.com/mrdoob/three.js)
 <details>
