@@ -1,0 +1,79 @@
+﻿@page "/"
+@using WakaSkies.WakaAPI;
+@using WakaSkies.WakaModelBuilder;
+@inject IJSRuntime JSRuntime;
+
+<textarea @bind=data></textarea>
+<button @onclick=Create>Go</button>
+<canvas id="threeCanvas"></canvas>
+
+
+@code{
+    string data = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // create the scene.
+            await JSRuntime.InvokeVoidAsync("createScene");
+        }
+    }
+
+    async void Create()
+    {
+        // key is not needed here.
+        var client = new WakaClient("a");
+        var insights = client.GetUserInsightsViaJSON(data);
+
+        var modelBuilder = new ModelBuilder();
+        // preset info for time being.
+        var model = modelBuilder.BuildModel(new ModelBuildSettings() { Response = insights, Year = "2022" });
+
+        // multiply by three because there are 3 floats per vertex and THREE.js 
+        // requires each vertex one after another in a list
+        float[] verts = new float[model.Vertices.Length * 3];
+        // each vertex gets a normal
+        float[] normals = new float[model.Vertices.Length * 3];
+
+        var i = 0;
+        var j = 0;
+        var face = 0;
+        var vertCount = 0;
+        // create the normal and verts list.
+        foreach (var vert in model.Vertices)
+        {
+            verts[i++] = vert.X;
+            verts[i++] = vert.Y;
+            verts[i++] = vert.Z;
+
+            normals[j++] = model.Faces[face].Normal.X;
+            normals[j++] = model.Faces[face].Normal.Y;
+            normals[j++] = model.Faces[face].Normal.Z;
+
+            vertCount++;
+            if (vertCount >= 3)
+            {
+                face++;
+                vertCount = 0;
+            }
+        }
+
+        // https://stackoverflow.com/a/64626309
+        // The marshalled call to createModel takes a while. If unmarshalled calling is supported,
+        // it uses it. This speeds up the JS interopt call drastically.
+        if (JSRuntime is IJSUnmarshalledRuntime webAssemblyJSRuntime)
+        {
+            // call the function.
+            // The true in the last param means it is unmarshalled.
+            webAssemblyJSRuntime.InvokeUnmarshalled<float[], float[], bool, object>("createModel", verts, normals, true);
+        }
+        else
+        {
+            // call the JS function.
+            // The true in the last param means it is marshalled.
+            await JSRuntime.InvokeVoidAsync("createModel", verts, normals, false);
+        }
+
+    }
+}

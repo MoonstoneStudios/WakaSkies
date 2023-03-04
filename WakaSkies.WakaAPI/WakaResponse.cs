@@ -50,7 +50,7 @@ namespace WakaSkies.WakaAPI
         public bool IsUpToDatePendingFuture { get; set; }
         public DateTimeOffset? ModifiedAt { get; set; }
         public long PercentCalculated { get; set; }
-        public long Range { get; set; }
+        //public long Range { get; set; }
         public DateTimeOffset? Start { get; set; }
         public string Status { get; set; }
         public long Timeout { get; set; }

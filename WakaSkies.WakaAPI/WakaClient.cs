@@ -52,6 +52,32 @@ namespace WakaSkies.WakaAPI
         }
 
         /// <summary>
+        /// Get the user insights from JSON instead of from WakaTime.
+        /// </summary>
+        /// <remarks>
+        /// This is used in the Blazor version of WakaSkies because WakaTime blocks all requests from a website.
+        /// This is to keep API keys safe. They provide embedabbles instead.
+        /// To get the JSON data, go here: https://wakatime.com/share/embed.
+        /// Then click "JSON" under the Format section. Then select "Coding Activity (Table)".
+        /// The JSON to input will be generated.
+        /// </remarks>
+        /// <param name="json">The JSON.</param>
+        /// <returns>A <see cref="WakaResponse"/>.</returns>
+        public WakaResponse GetUserInsightsViaJSON(string json)
+        {
+            // setup the JSON so it mimics the WakaTime API call response.
+            var addToFront = "{\"data\":";
+            json = addToFront + json;
+            json += "}";
+
+            var wakaResponse = new WakaResponse();
+            wakaResponse = JsonConvert.DeserializeObject<WakaResponse>(json);
+            wakaResponse.Content = json;
+
+            return wakaResponse;
+        }
+
+        /// <summary>
         /// Get the insights.
         /// </summary>
         /// <param name="userName">The username of the User we are retrieving data from.</param>
