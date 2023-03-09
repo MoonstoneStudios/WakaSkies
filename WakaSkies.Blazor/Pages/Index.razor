@@ -5,12 +5,44 @@
 
 @*https://threejs.org/manual/#en/tips#html-background*@
 <canvas id="threeCanvas"></canvas>
-<textarea @bind=data style="position: relative"></textarea>
-<button @onclick=Create style="position: relative">Go</button>
 
+@if (showStartup)
+{
+    <div class="startup">
+        <div>
+            <span style="color: white">
+                WakaTime JSON Data:
+            </span>
+            <p>
+                <textarea @bind=jsonData style="position: relative"></textarea>
+            </p>
+        </div>
+
+        <div>
+            <button style="background-color: #333333; color: white; padding: 5px;"
+                @onclick=ToggleSettings>Advanced Settings</button>
+        </div>
+
+        <button @onclick=Create style="width: 100%;">Go</button>
+    </div>
+}
+
+@if (showSettings)
+{
+    <div class="settings-window">
+        <span style="color: white">
+            Hi!
+        </span>
+    </div>
+}
 
 @code{
-    string data = "";
+
+    // the JSON data.
+    string jsonData = "";
+
+    bool showSettings;
+    bool showStartup = true;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -21,11 +53,14 @@
         }
     }
 
+    void ToggleSettings() => showSettings = !showSettings;
+
     async void Create()
     {
+
         // key is not needed here.
         var client = new WakaClient("a");
-        var insights = client.GetUserInsightsViaJSON(data);
+        var insights = client.GetUserInsightsViaJSON(jsonData);
 
         var modelBuilder = new ModelBuilder();
         // preset info for time being.
@@ -60,6 +95,8 @@
             }
         }
 
+        await JSRuntime.InvokeVoidAsync("setHalfWidth", model.Width / 2);
+
         // https://stackoverflow.com/a/64626309
         // The marshalled call to createModel takes a while. If unmarshalled calling is supported,
         // it uses it. This speeds up the JS interopt call drastically.
@@ -76,5 +113,7 @@
             await JSRuntime.InvokeVoidAsync("createModel", verts, normals, false);
         }
 
+        showStartup = false;
+        StateHasChanged();
     }
 }

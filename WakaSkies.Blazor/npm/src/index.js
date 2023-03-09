@@ -13,6 +13,8 @@ var controls;
 
 // the mesh of the waka model.
 var modelMesh;
+// Half of the width to move the model by so it is centered.
+var halfWidth;
 
 /**
  * Create the scene.
@@ -35,23 +37,29 @@ window.createScene = function() {
     scene.add(amb);
     scene.add(point);
 
-    const helper = new THREE.DirectionalLightHelper(point);
-    scene.add(helper);
-
     // setup the renderer
     renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threeCanvas'), antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     // add the debug controls.
     controls = new OrbitControls(camera, renderer.domElement);
-
-    // add the debug axis.
-    const axesHelper = new THREE.AxesHelper( 5 );
-    scene.add( axesHelper );
-
+    controls.autoRotateSpeed = 0.4;
+    controls.enableDamping = true;
+    controls.minPolarAngle = 1;
+    controls.maxPolarAngle = 1;
+    controls.enableZoom = false;
+    controls.minDistance = 45;
+    controls.enablePan = false;
+    controls.enableRotate = false;
+    
+    controls.addEventListener("end", userManuallyRotated);
+    
+    // create the skybox
     createSkybox();
-
+    
     controls.update();
+    
+    // start the scene render loop.
     animate();
 }
 
@@ -60,13 +68,12 @@ window.createScene = function() {
  */
 // https://threejs.org/docs/index.html?q=cube#api/en/loaders/CubeTextureLoader
 function createSkybox(){
-
     const randNum = getRandomInt(7);
-
+    
     scene.background = new THREE.CubeTextureLoader()
 	.setPath( `img/Skyboxes/${randNum}/` )
 	.load( [
-		'right.png',
+        'right.png',
 		'left.png',
 		'top.png',
 		'bottom.png',
@@ -95,7 +102,7 @@ function getRandomInt(max) {
 window.createModel = function (verts, normals, unmarshalled) {
     var vertsArray;
     var normalsArray;
-
+    
     if (unmarshalled) {
         var vertsArray = toFloatArray(verts);
         var normalsArray = toFloatArray(normals);
@@ -103,24 +110,34 @@ window.createModel = function (verts, normals, unmarshalled) {
         vertsArray = Float32Array.from(verts);
         normalsArray = Float32Array.from(normals);
     }
-
+    
     // if model is already generated, remove it.
     if (scene.children.includes(modelMesh)) {
         scene.remove(modelMesh);
     }
-
+    
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(vertsArray, 3));
     geometry.setAttribute('normal', new THREE.BufferAttribute(normalsArray, 3));
     geometry.computeVertexNormals();
-
+    
     // https://stackoverflow.com/a/26471195
     const material = new THREE.MeshPhongMaterial({ side: THREE.DoubleSide, color: 0xa3a3a3, specular: 0xfefefe, shininess: 0, reflectivity: 0, vertexColors: true});
     modelMesh = new THREE.Mesh(geometry, material);
     modelMesh.castShadow = true;
     modelMesh.receiveShadow = true;
-    modelMesh.position.x = -30;
+    modelMesh.position.x = -halfWidth;
     scene.add(modelMesh);
+
+    controls.autoRotate = true;
+    controls.enableRotate = true;
+}
+
+/**
+ * Half of the width to move the model by so it is centered.
+ */ 
+window.setHalfWidth = function(half){
+    halfWidth = half;
 }
 
 /**
@@ -136,10 +153,15 @@ function animate() {
         camera.updateProjectionMatrix();
     }
 
+    // update auto rotate.
+    controls.update();
+    // render the scene.
     renderer.render(scene, camera);
 }
 
-// https://threejs.org/manual/#en/responsive
+/**
+ * @copyright https://threejs.org/manual/#en/responsive
+ */
 function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
     const pixelRatio = window.devicePixelRatio;
@@ -174,3 +196,22 @@ function toFloatArray(floats) {
     var j = new Float32Array(Module.HEAPF32.buffer, m + 4, r);
     return j;
 }
+
+/**
+ * When the user has manually rotated, pause auto rotation for 2 seconds.
+ * Credit on async func and await statement: https://stackoverflow.com/a/47480429
+ */
+async function userManuallyRotated(){
+    controls.autoRotate = false;
+
+    await delay(2000);
+
+    controls.autoRotate = true;
+}
+
+/**
+ * Delay for miliseconds
+ * @param {*} ms Miliseconds to delay
+ * @copyright https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line#comment114272794_47480429
+ */
+const delay = async (ms) => new Promise(res => setTimeout(res, ms));
