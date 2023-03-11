@@ -16,6 +16,9 @@ var modelMesh;
 // Half of the width to move the model by so it is centered.
 var halfWidth;
 
+// if the camera is paused.
+var cameraPaused = true;
+
 /**
  * Create the scene.
  */
@@ -31,7 +34,6 @@ window.createScene = function() {
     // create the lights
     const amb = new THREE.AmbientLight(0xf2f2f2);
     const point = new THREE.DirectionalLight();
-    //point.position.z = 10;
     point.position.set(5,-11,7);
     point.castShadow = true;
     scene.add(amb);
@@ -41,7 +43,7 @@ window.createScene = function() {
     renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threeCanvas'), antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // add the debug controls.
+    // add the camera controls.
     controls = new OrbitControls(camera, renderer.domElement);
     controls.autoRotateSpeed = 0.4;
     controls.enableDamping = true;
@@ -55,7 +57,7 @@ window.createScene = function() {
     controls.addEventListener("end", userManuallyRotated);
     
     // create the skybox
-    createSkybox();
+    createSkybox(getRandomInt(7));
     
     controls.update();
     
@@ -65,13 +67,12 @@ window.createScene = function() {
 
 /**
  * Generate the skybox.
+ * @param {number} index The index of the skybox to set as the BG.
  */
 // https://threejs.org/docs/index.html?q=cube#api/en/loaders/CubeTextureLoader
-function createSkybox(){
-    const randNum = getRandomInt(7);
-    
+function createSkybox(index){
     scene.background = new THREE.CubeTextureLoader()
-	.setPath( `img/Skyboxes/${randNum}/` )
+	.setPath( `img/Skyboxes/${index}/` )
 	.load( [
         'right.png',
 		'left.png',
@@ -126,11 +127,15 @@ window.createModel = function (verts, normals, unmarshalled) {
     modelMesh = new THREE.Mesh(geometry, material);
     modelMesh.castShadow = true;
     modelMesh.receiveShadow = true;
-    modelMesh.position.x = -halfWidth;
+
+    // add 4 for a little shift to the side to make it look better.
+    modelMesh.position.x = -halfWidth + 4;
+    modelMesh.position.y = 4;
     scene.add(modelMesh);
 
     controls.autoRotate = true;
     controls.enableRotate = true;
+    cameraPaused = false;
 }
 
 /**
@@ -206,7 +211,10 @@ async function userManuallyRotated(){
 
     await delay(2000);
 
-    controls.autoRotate = true;
+    // if camera is already paused don't unpuase it.
+    if (!cameraPaused){
+        controls.autoRotate = true;
+    }
 }
 
 /**
@@ -215,3 +223,15 @@ async function userManuallyRotated(){
  * @copyright https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line#comment114272794_47480429
  */
 const delay = async (ms) => new Promise(res => setTimeout(res, ms));
+
+window.pauseCamera = function(){
+    controls.autoRotate = false;
+    controls.enableRotate = false;
+    cameraPaused = true;
+}
+
+window.unpauseCamera = function() {
+    controls.autoRotate = true;
+    controls.enableRotate = true;
+    cameraPaused = false;
+}

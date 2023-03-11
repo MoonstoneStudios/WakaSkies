@@ -1,10 +1,26 @@
 ﻿@page "/"
 @using WakaSkies.WakaAPI;
 @using WakaSkies.WakaModelBuilder;
+@using BlazorDownloadFile;
 @inject IJSRuntime JSRuntime;
+@inject IBlazorDownloadFileService DownloadService;
 
 @*https://threejs.org/manual/#en/tips#html-background*@
 <canvas id="threeCanvas"></canvas>
+
+@if (showIcons)
+{
+    <div class="icons">
+        <button @onclick=ToggleHome>
+            Hi
+        </button>
+        <p>
+            <button @onclick=DownloadFile>
+                Hi
+            </button>
+        </p>
+    </div>
+}
 
 @if (showStartup)
 {
@@ -36,6 +52,7 @@
     </div>
 }
 
+
 @code{
 
     // the JSON data.
@@ -43,6 +60,9 @@
 
     bool showSettings;
     bool showStartup = true;
+    bool showIcons;
+
+    WakaModel model;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -55,6 +75,21 @@
 
     void ToggleSettings() => showSettings = !showSettings;
 
+    async void ToggleHome()
+    {
+        showStartup = !showStartup;
+        showIcons = !showIcons;
+
+        if (showStartup)
+        {
+            await JSRuntime.InvokeVoidAsync("pauseCamera");
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("pauseCamera");
+        }
+    }
+
     async void Create()
     {
 
@@ -64,7 +99,7 @@
 
         var modelBuilder = new ModelBuilder();
         // preset info for time being.
-        var model = modelBuilder.BuildModel(new ModelBuildSettings() { Response = insights, Year = "2022" });
+        model = modelBuilder.BuildModel(new ModelBuildSettings() { Response = insights, Year = "2022" });
 
         // multiply by three because there are 3 floats per vertex and THREE.js 
         // requires each vertex one after another in a list
@@ -114,6 +149,20 @@
         }
 
         showStartup = false;
+        showIcons = true;
         StateHasChanged();
     }
+
+    public async void DownloadFile()
+    {
+        var serializer = new STLSerializer();
+        var file = serializer.SerializeBinaryStream(model);
+
+        //uncomment for ASCII
+        //await DownloadService.DownloadFileFromText("WakaSkies Model.stl", file, System.Text.Encoding.UTF8, contentType: "text/plain", encoderShouldEmitIdentifier: false);
+
+        // binary
+        await DownloadService.DownloadFile("WakaSkies Model.stl", file.ToArray(), contentType: "application/octet-stream");
+    }
+
 }
