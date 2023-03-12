@@ -46,12 +46,45 @@
 @if (showSettings)
 {
     <div class="settings-window">
-        <span style="color: white">
-            Hi!
-        </span>
+        <div>
+            <div class="settings-item">
+                Add stats to model
+                <input type="checkbox" @bind="@settings.AddStatistics" />
+            </div>
+
+            <div class="settings-item">
+                Round to nearest hour
+                <input type="checkbox" @bind="@settings.RoundToNearestHour" />
+            </div>
+            @*TODO: validation*@
+            <div class="settings-item">
+                Minumum hours
+                <input type="number" @bind="@settings.MinumimHours" max="12" min="0" step="1"/>
+            </div>
+
+            <div class="settings-item">
+                Minumum height of bars (bars with a value of 0 are ignored)
+                <input type="number" @bind="@settings.MinimumBarHeight" max="3" min="0" step="1" />
+            </div>
+
+            <div class="settings-item">
+                Maximum height of bars
+                <input type="number" @bind="@settings.MaximumBarHeight" max="12" min="4" step="1"/>
+            </div>
+
+            <div class="settings-item">
+                Add border to model base
+                <input type="checkbox" @bind="@settings.AddBorder" />
+            </div>
+        </div>
+
+        <div>
+            <button @onclick=CancelSettings>Cancel</button>
+            <button @onclick=ToggleSettings>Ok</button> 
+        </div>
+
     </div>
 }
-
 
 @code{
 
@@ -64,16 +97,29 @@
 
     WakaModel model;
 
+    ModelBuildSettings settings;
+    ModelBuildSettings oldSettings;
+    //bool defaultTimeout = true;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            settings = new ModelBuildSettings() { Year="2022" };
+            oldSettings = settings;
             // create the scene.
             await JSRuntime.InvokeVoidAsync("createScene");
         }
     }
 
     void ToggleSettings() => showSettings = !showSettings;
+
+    void CancelSettings()
+    {
+        settings = oldSettings;
+        oldSettings = settings;
+        ToggleSettings();
+    }
 
     async void ToggleHome()
     {
@@ -99,7 +145,8 @@
 
         var modelBuilder = new ModelBuilder();
         // preset info for time being.
-        model = modelBuilder.BuildModel(new ModelBuildSettings() { Response = insights, Year = "2022" });
+        settings.Response = insights;
+        model = modelBuilder.BuildModel(settings);
 
         // multiply by three because there are 3 floats per vertex and THREE.js 
         // requires each vertex one after another in a list
