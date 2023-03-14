@@ -12,11 +12,11 @@
 {
     <div class="icons">
         <button @onclick=ToggleHome>
-            Hi
+            Home
         </button>
         <p>
-            <button @onclick=DownloadFile>
-                Hi
+            <button @onclick=ToggleSaveFileWindow>
+                Download
             </button>
         </p>
     </div>
@@ -86,6 +86,25 @@
     </div>
 }
 
+@if (showSaveFileMenu)
+{
+    <div class="settings-window">
+        <div class="card text-center" style="background: var(--window-bg); border: none">
+          <div class="card-body">
+            <h5 class="card-title">Download model</h5>
+            <button @onclick=DownloadFile style="padding: 25px;">Click to download model.</button>
+          </div>
+          <div class="card-footer">
+              Generate ASCII stl file (plain text, bigger file size)
+            <input type="checkbox" @bind=downloadAscii/>
+          </div>
+        </div>
+        <div>
+            <button @onclick=ToggleSaveFileWindow>Cancel</button>
+        </div>
+    </div>
+}
+
 @code{
 
     // the JSON data.
@@ -94,6 +113,9 @@
     bool showSettings;
     bool showStartup = true;
     bool showIcons;
+    bool showSaveFileMenu;
+
+    bool downloadAscii;
 
     WakaModel model;
 
@@ -112,7 +134,12 @@
         }
     }
 
-    void ToggleSettings() => showSettings = !showSettings;
+    void ToggleSettings() 
+    {
+        if (showSaveFileMenu) return;
+
+        showSettings = !showSettings;
+    }
 
     void CancelSettings()
     {
@@ -123,6 +150,7 @@
 
     async void ToggleHome()
     {
+        if (showSaveFileMenu) return;
         showStartup = !showStartup;
         showIcons = !showIcons;
 
@@ -138,7 +166,6 @@
 
     async void Create()
     {
-
         // key is not needed here.
         var client = new WakaClient("a");
         var insights = client.GetUserInsightsViaJSON(jsonData);
@@ -200,16 +227,25 @@
         StateHasChanged();
     }
 
+    void ToggleSaveFileWindow() => showSaveFileMenu = !showSaveFileMenu;
+
     public async void DownloadFile()
     {
         var serializer = new STLSerializer();
-        var file = serializer.SerializeBinaryStream(model);
+        if (!downloadAscii)
+        {
+            var file = serializer.SerializeBinaryStream(model);
+            await DownloadService.DownloadFile("WakaSkies Model.stl", file.ToArray(), contentType: "application/octet-stream");
+        }
+        else
+        {
+            var file = serializer.Serialize(model);
+            // include optional variables to let compiler distingush between overload functions.
+            await DownloadService.DownloadFileFromText("WakaSkies Model.stl", file, System.Text.Encoding.UTF8, contentType: "text/plain", encoderShouldEmitIdentifier: false);
+        }
 
-        //uncomment for ASCII
-        //await DownloadService.DownloadFileFromText("WakaSkies Model.stl", file, System.Text.Encoding.UTF8, contentType: "text/plain", encoderShouldEmitIdentifier: false);
-
-        // binary
-        await DownloadService.DownloadFile("WakaSkies Model.stl", file.ToArray(), contentType: "application/octet-stream");
+        ToggleSaveFileWindow();
+        StateHasChanged();
     }
 
 }
